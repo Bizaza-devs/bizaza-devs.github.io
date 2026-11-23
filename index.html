@@ -1,82 +1,89 @@
 <!doctype html>
-<html lang="en" data-lang="en">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Zalan Birtalan — Portfolio</title>
-  <meta name="description" content="Student developer and founder of ALAN BIRTH. Projects, knowledge, education path and live GitHub activity.">
-  <meta name="theme-color" content="#050505">
+  <meta name="description" content="Student developer and founder of the streetwear brand ALAN BIRTH. Projects, skills, live GitHub activity and a downloadable CV.">
+  <meta name="theme-color" content="#07070c">
   <meta property="og:title" content="Zalan Birtalan — Portfolio">
-  <meta property="og:description" content="Student developer · founder of ALAN BIRTH · next stop: KTH, Stockholm.">
+  <meta property="og:description" content="Student developer · founder of ALAN BIRTH.">
   <meta property="og:type" content="website">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23000'/%3E%3Ctext x='16' y='21' font-family='monospace' font-size='13' font-weight='700' fill='%23fff' text-anchor='middle'%3EZB%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23FF5B3A'/%3E%3Cstop offset='.5' stop-color='%23A35BFF'/%3E%3Cstop offset='1' stop-color='%234D6BFE'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Ctext x='16' y='21' font-family='Arial' font-size='13' font-weight='900' fill='%23fff' text-anchor='middle'%3EZB%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- ?v= : új kiadásnál emeld, különben a böngésző a régi fájlt használhatja -->
+  <link rel="stylesheet" href="assets/css/style.css?v=3">
 </head>
 <body>
   <!-- Háttér: csak CSS, nincs kép -->
   <div class="bg" aria-hidden="true">
-    <div class="bg__blob bg__blob--a"></div>
-    <div class="bg__blob bg__blob--b"></div>
-    <div class="bg__blob bg__blob--c"></div>
-    <div class="bg__grid"></div>
-    <div class="bg__vignette"></div>
+    <div class="aurora aurora--a"></div>
+    <div class="aurora aurora--b"></div>
+    <div class="aurora aurora--c"></div>
+    <div class="dots"></div>
+    <div class="dots dots--lit"></div>
+    <div class="grain"></div>
   </div>
-
 
   <div class="progress" aria-hidden="true"><span></span></div>
 
   <header class="nav-wrap">
-    <nav class="nav glass" aria-label="Main">
+    <nav class="nav" aria-label="Main">
       <a class="nav__mark" href="#index" aria-label="Home">ZB</a>
       <ul class="nav__links" id="navLinks"></ul>
+      <a class="nav__cta cv-link" download>CV ↓</a>
     </nav>
   </header>
 
   <main>
     <!-- HERO -->
     <section class="hero" id="index">
-      <div class="hero__card glass glass--lg reveal">
-        <div class="hero__meta mono">
-          <span class="dot dot--live"></span>
-          <span id="heroLocation"></span>
-          <span class="sep">/</span>
-          <span><span data-ui="local"></span> <span id="clock">--:--:--</span></span>
-        </div>
-        <h1 class="hero__name" id="heroName"></h1>
-        <p class="hero__role mono" id="heroRole"></p>
-        <p class="hero__tagline" id="heroTagline"></p>
-        <div class="hero__status mono" id="heroStatus"></div>
-        <div class="hero__actions">
-          <a class="btn btn--solid cv-link" download><span data-ui="cv"></span> <span class="muted-ink">PDF ↓</span></a>
-          <a class="btn" href="#work"><span data-ui="work"></span> ↓</a>
+      <div class="hero__main">
+        <div class="chip mono reveal"><span class="pulse"></span><span id="heroChip"></span></div>
+        <h1 class="hero__name reveal" id="heroName"></h1>
+        <p class="hero__role mono reveal" id="heroRole"></p>
+        <p class="hero__tagline reveal" id="heroTagline"></p>
+        <div class="hero__actions reveal">
+          <a class="btn btn--grad cv-link" download><span data-ui="cv"></span> <span class="btn__ext mono">PDF ↓</span></a>
+          <a class="btn btn--ghost" href="#work"><span data-ui="work"></span> →</a>
         </div>
       </div>
-      <div class="stats glass reveal" id="stats"></div>
+
+      <aside class="idcard reveal" aria-label="Quick facts">
+        <div class="idcard__head mono"><span>ID</span><span>// bizaza</span></div>
+        <dl class="idcard__list mono" id="idcard"></dl>
+        <div class="idcard__status mono" id="heroStatus"></div>
+      </aside>
     </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee" aria-hidden="true"><div class="marquee__track mono" id="marquee"></div></div>
+
+    <!-- STATS -->
+    <section class="stats reveal" id="stats" aria-label="Numbers"></section>
 
     <!-- PROJECTS -->
     <section class="section" id="work">
       <header class="section__head reveal">
-        <span class="section__idx mono">01</span>
+        <span class="section__idx mono">01 /</span>
         <h2 data-ui="work"></h2>
         <p data-ui="workSub"></p>
       </header>
       <div class="projects" id="projects"></div>
 
       <header class="subhead reveal">
-        <h3 class="mono small" data-ui="latest"></h3>
-        <p class="muted" data-ui="latestSub"></p>
+        <h3 class="mono" data-ui="latest"></h3>
+        <p data-ui="latestSub"></p>
       </header>
-      <div class="gh-repos" id="ghRepoList"></div>
+      <div class="repos" id="ghRepoList"></div>
     </section>
 
     <!-- STACK -->
     <section class="section" id="stack">
       <header class="section__head reveal">
-        <span class="section__idx mono">02</span>
+        <span class="section__idx mono">02 /</span>
         <h2 data-ui="stack"></h2>
         <p data-ui="stackSub"></p>
       </header>
@@ -87,36 +94,35 @@
     <!-- GITHUB -->
     <section class="section" id="github">
       <header class="section__head reveal">
-        <span class="section__idx mono">03</span>
+        <span class="section__idx mono">03 /</span>
         <h2 data-ui="gh"></h2>
         <p><span data-ui="ghSub"></span> <a class="mono link" id="ghProfile" target="_blank" rel="noopener"></a></p>
       </header>
 
-      <div class="gh-grid">
-        <div class="glass gh-cal reveal">
+      <div class="gh">
+        <div class="card gh-cal reveal">
           <div class="gh-cal__head">
-            <div><strong class="big mono" id="ghTotal">—</strong> <span class="muted" data-ui="contributions"></span></div>
+            <div><strong class="big" id="ghTotal">—</strong> <span class="muted" data-ui="contributions"></span></div>
             <div class="gh-cal__legend mono"><span data-ui="less"></span><i data-l="0"></i><i data-l="1"></i><i data-l="2"></i><i data-l="3"></i><i data-l="4"></i><span data-ui="more"></span></div>
           </div>
           <div class="gh-cal__scroll"><div class="gh-cal__grid" id="ghCal" role="img" aria-label="Contribution calendar"></div></div>
           <div class="gh-cal__months mono" id="ghMonths"></div>
         </div>
 
-        <div class="gh-side">
-          <div class="gh-kpis">
-            <div class="glass kpi reveal"><span class="kpi__v mono" id="ghRepos">—</span><span class="kpi__k" data-ui="repos"></span></div>
-            <div class="glass kpi reveal"><span class="kpi__v mono" id="ghStars">—</span><span class="kpi__k" data-ui="stars"></span></div>
-            <div class="glass kpi reveal"><span class="kpi__v mono" id="ghFollowers">—</span><span class="kpi__k" data-ui="followers"></span></div>
-            <div class="glass kpi reveal"><span class="kpi__v mono" id="ghStreak">—</span><span class="kpi__k" id="ghStreakLabel">streak</span></div>
-          </div>
-          <div class="glass gh-lang reveal">
-            <h3 class="mono small" data-ui="languages"></h3>
-            <div class="lang-bar" id="ghLangBar"></div>
-            <ul class="lang-list mono" id="ghLangList"></ul>
-          </div>
+        <div class="gh-kpis">
+          <div class="card kpi reveal" style="--accent: var(--lime)"><span class="kpi__v" id="ghRepos">—</span><span class="kpi__k mono" data-ui="repos"></span></div>
+          <div class="card kpi reveal" style="--accent: var(--coral)"><span class="kpi__v" id="ghStars">—</span><span class="kpi__k mono" data-ui="stars"></span></div>
+          <div class="card kpi reveal" style="--accent: var(--violet)"><span class="kpi__v" id="ghFollowers">—</span><span class="kpi__k mono" data-ui="followers"></span></div>
+          <div class="card kpi reveal" style="--accent: var(--blue)"><span class="kpi__v" id="ghStreak">—</span><span class="kpi__k mono" id="ghStreakLabel">streak</span></div>
         </div>
 
-        <div class="glass gh-feed reveal">
+        <div class="card gh-lang reveal">
+          <h3 class="mono small" data-ui="languages"></h3>
+          <div class="lang-bar" id="ghLangBar"></div>
+          <ul class="lang-list mono" id="ghLangList"></ul>
+        </div>
+
+        <div class="card gh-feed reveal">
           <h3 class="mono small" data-ui="recent"></h3>
           <ul id="ghFeed" class="feed mono"></ul>
         </div>
@@ -124,13 +130,12 @@
     </section>
 
     <!-- CONTACT -->
-    <section class="section" id="contact">
-      <div class="contact glass glass--lg reveal">
-        <span class="section__idx mono">04</span>
-        <h2 data-ui="contact"></h2>
-        <p data-ui="contactSub"></p>
-        <div class="contact__links" id="contactLinks"></div>
-      </div>
+    <section class="section contact" id="contact">
+      <span class="section__idx mono reveal">04 /</span>
+      <h2 class="contact__title reveal">Let’s build<br><span class="grad">something.</span></h2>
+      <p class="contact__sub reveal" data-ui="contactSub"></p>
+      <a class="contact__mail reveal" id="contactMail"></a>
+      <div class="contact__links reveal" id="contactLinks"></div>
     </section>
   </main>
 
@@ -139,9 +144,9 @@
     <span><span data-ui="updated"></span> <span id="updated"></span></span>
   </footer>
 
-  <!-- Command palette -->
+  <!-- Parancspaletta (Ctrl K / ⌘K / "/") — rejtett, nincs kiírva -->
   <div class="palette" id="palette" hidden>
-    <div class="palette__box glass glass--lg" role="dialog" aria-modal="true" aria-label="Command palette">
+    <div class="palette__box" role="dialog" aria-modal="true" aria-label="Command palette">
       <input class="palette__input mono" id="paletteInput" type="text" autocomplete="off" spellcheck="false">
       <ul class="palette__list mono" id="paletteList" role="listbox"></ul>
     </div>
@@ -149,8 +154,8 @@
 
   <noscript><p class="noscript">This portfolio renders from data with JavaScript. Please enable it.</p></noscript>
 
-  <script src="assets/js/data.js"></script>
-  <script src="assets/js/github.js"></script>
-  <script src="assets/js/main.js"></script>
+  <script src="assets/js/data.js?v=3"></script>
+  <script src="assets/js/github.js?v=3"></script>
+  <script src="assets/js/main.js?v=3"></script>
 </body>
 </html>

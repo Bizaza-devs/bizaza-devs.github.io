@@ -2,10 +2,10 @@
 
 Personal portfolio of **Zalan Birtalan** — student developer, founder of ALAN BIRTH.
 
-Monochrome liquid glass. **0 images, 0 frameworks, 0 dependencies** — plain HTML, CSS and JavaScript.
+Night Shift: deep black, electric gradients, bold type. **0 images, 0 frameworks, 0 dependencies** — plain HTML, CSS and JavaScript.
 
 ## Features
-- Liquid glass panels: `backdrop-filter` + an SVG displacement filter for real refraction (Chromium), graceful blur fallback elsewhere
+- Generative CSS background: drifting aurora, a dot grid that lights up around the cursor, film grain
 - All content in one file: [`assets/js/data.js`](assets/js/data.js)
 - Live GitHub data: contribution calendar, streaks, languages, recent activity, repositories
 - Downloadable one-page CV (PDF), generated from the same data: `scripts/build-cv.ps1`

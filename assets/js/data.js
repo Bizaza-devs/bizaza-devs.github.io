@@ -25,16 +25,16 @@ window.PORTFOLIO = {
 
   /* Real numbers from my second brain (2026-11-23). value "age" = computed from the birth date */
   stats: [
-    { value: 26, unit: "", label: "Theme versions", note: "shipped on alanbirth.com" },
-    { value: 226, unit: "", label: "Notes", note: "in my Obsidian second brain" },
-    { value: 3, unit: "", label: "Projects", note: "live or in progress" },
-    { value: "age", unit: "y", label: "Age", note: "born October 2009" }
+    { value: 26, unit: "", label: "Theme versions", note: "shipped on alanbirth.com", color: "coral" },
+    { value: 226, unit: "", label: "Notes", note: "in my Obsidian second brain", color: "violet" },
+    { value: 3, unit: "", label: "Projects", note: "live or in progress", color: "blue" },
+    { value: "age", unit: "yrs", label: "Age", note: "born October 2009", color: "lime" }
   ],
 
   /* status: live | building */
   projects: [
     {
-      id: "alanbirth",
+      id: "alanbirth", accent: "coral",
       name: "ALAN BIRTH",
       year: "2025 —",
       status: "building",
@@ -51,7 +51,7 @@ window.PORTFOLIO = {
       repo: null
     },
     {
-      id: "secondbrain",
+      id: "secondbrain", accent: "violet",
       name: "Second Brain",
       year: "2026",
       status: "live",
@@ -67,12 +67,12 @@ window.PORTFOLIO = {
       repo: null
     },
     {
-      id: "portfolio",
+      id: "portfolio", accent: "lime",
       name: "This portfolio",
       year: "2026",
       status: "live",
       kind: "Website",
-      summary: "Zero images, zero frameworks. Monochrome liquid glass in plain HTML, CSS and JavaScript, with live data from the GitHub API and a generated PDF résumé.",
+      summary: "Zero images, zero frameworks. Plain HTML, CSS and JavaScript with generative backgrounds, live data from the GitHub API and a generated PDF résumé.",
       role: "Design & development",
       stack: ["HTML", "CSS", "JavaScript", "GitHub API", "GitHub Pages"],
       metrics: [
@@ -173,7 +173,7 @@ window.UI = {
   role: "Role",
   cv: "Download CV",
   palette: "Type a command…",
-  built: "Built with HTML, CSS & JavaScript. 0 images.",
+  built: "Hand-built with HTML, CSS & JavaScript. No frameworks, no images.",
   updated: "Updated",
   less: "Less", more: "More"
 };
