@@ -61,6 +61,10 @@
         <p class="hero__role mono" id="heroRole"></p>
         <p class="hero__tagline" id="heroTagline"></p>
         <div class="hero__status mono" id="heroStatus"></div>
+        <div class="hero__actions">
+          <a class="btn btn--solid cv-link" download><span data-ui="cv"></span> <span class="muted-ink">PDF ↓</span></a>
+          <a class="btn" href="#work"><span data-ui="work"></span> ↓</a>
+        </div>
       </div>
       <div class="stats" id="stats"></div>
     </section>
@@ -73,6 +77,12 @@
         <p data-ui="workSub"></p>
       </header>
       <div class="projects" id="projects"></div>
+
+      <header class="subhead reveal">
+        <h3 class="mono small" data-ui="latest"></h3>
+        <p class="muted" data-ui="latestSub"></p>
+      </header>
+      <div class="gh-repos" id="ghRepoList"></div>
     </section>
 
     <!-- STACK -->
@@ -86,20 +96,10 @@
       <div class="stack" id="stackGrid"></div>
     </section>
 
-    <!-- PATH -->
-    <section class="section" id="path">
-      <header class="section__head reveal">
-        <span class="section__idx mono">03</span>
-        <h2 data-ui="path"></h2>
-        <p data-ui="pathSub"></p>
-      </header>
-      <ol class="timeline glass reveal" id="timeline"></ol>
-    </section>
-
     <!-- GITHUB -->
     <section class="section" id="github">
       <header class="section__head reveal">
-        <span class="section__idx mono">04</span>
+        <span class="section__idx mono">03</span>
         <h2 data-ui="gh"></h2>
         <p><span data-ui="ghSub"></span> <a class="mono link" id="ghProfile" target="_blank" rel="noopener"></a></p>
       </header>
@@ -132,15 +132,13 @@
           <h3 class="mono small" data-ui="recent"></h3>
           <ul id="ghFeed" class="feed mono"></ul>
         </div>
-
-        <div class="gh-repos" id="ghRepoList"></div>
       </div>
     </section>
 
     <!-- CONTACT -->
     <section class="section" id="contact">
       <div class="contact glass glass--lg glass--liquid reveal">
-        <span class="section__idx mono">05</span>
+        <span class="section__idx mono">04</span>
         <h2 data-ui="contact"></h2>
         <p data-ui="contactSub"></p>
         <div class="contact__links" id="contactLinks"></div>

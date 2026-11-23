@@ -1,6 +1,6 @@
 /* ============================================================
-   PORTFOLIO DATA — minden tartalom itt van, az oldal ebből épül.
-   Szerkesztéshez csak ezt a fájlt kell átírni.
+   PORTFOLIO DATA — minden tartalom itt van, az oldal és az
+   önéletrajz (cv.html) is ebből épül.
    Ahol `null` vagy üres string áll, az a rész nem jelenik meg.
    ============================================================ */
 
@@ -8,35 +8,36 @@ window.PORTFOLIO = {
   github: "Bizaza-devs",
   timezone: "Europe/Budapest",
   updated: "2026-11-23",
+  cvPdf: { en: "cv/Zalan-Birtalan-CV.pdf", hu: "cv/Birtalan-Zalan-oneletrajz.pdf" },
 
   person: {
     name: { en: "Zalan Birtalan", hu: "Birtalan Zalan" },
-    handle: "bizaza",
-    location: { en: "Diósd · Budapest area, HU", hu: "Diósd · Budapest mellett" },
+    born: "2009-10-07",
+    location: { en: "Diósd, Hungary", hu: "Diósd" },
     role: {
       en: "Student developer · founder of ALAN BIRTH",
       hu: "Diák fejlesztő · az ALAN BIRTH alapítója"
     },
     tagline: {
-      en: "I build things on the web — a streetwear brand, the store it runs on, and the systems behind both. Next stop: KTH, Stockholm.",
-      hu: "Weben építek: egy streetwear brandet, a webshopot, amin fut, és a rendszereket mögöttük. A következő cél: KTH, Stockholm."
+      en: "I build things on the web — a streetwear brand, the store it runs on, and the systems behind both.",
+      hu: "Weben építek: egy streetwear brandet, a webshopot, amin fut, és a rendszereket mögöttük."
     },
     status: [
+      { en: "11th grade · Creascola, Budaörs", hu: "11. évfolyam · Creascola, Budaörs" },
       { en: "building ALAN BIRTH · Collection 01 — FW26", hu: "ALAN BIRTH építése · Collection 01 — FW26" },
-      { en: "learning full-stack web development", hu: "full-stack webfejlesztést tanulok" },
-      { en: "target: KTH Royal Institute of Technology, 2028", hu: "cél: KTH Royal Institute of Technology, 2028" }
+      { en: "learning full-stack web development", hu: "full-stack webfejlesztést tanulok" }
     ]
   },
 
-  /* Valós számok a second brainből (2026-11-23). */
+  /* Valós számok a second brainből (2026-11-23). value: "age" = a születési dátumból számolva */
   stats: [
     { value: 26, label: { en: "theme versions shipped", hu: "kiadott témaverzió" }, note: "alanbirth.com" },
     { value: 226, label: { en: "notes in my second brain", hu: "jegyzet a second brainemben" }, note: "Obsidian" },
     { value: 4, label: { en: "projects live or in progress", hu: "élő vagy készülő projekt" }, note: "2025–26" },
-    { value: 4, label: { en: "age I started ice hockey", hu: "éves korom óta hokizom" }, note: "ice hockey" }
+    { value: "age", label: { en: "years old", hu: "éves vagyok" }, note: "born 2009" }
   ],
 
-  /* status: live | building | planned */
+  /* status: live | building */
   projects: [
     {
       id: "alanbirth",
@@ -83,8 +84,8 @@ window.PORTFOLIO = {
       status: "live",
       kind: { en: "Knowledge system · Automation", hu: "Tudásrendszer · Automatizálás" },
       summary: {
-        en: "A single Obsidian vault wired to Claude Code: seven root folders, per-project context files, hooks that write a log after every session, vetted skills.",
-        hu: "Egyetlen Obsidian-széf Claude Code-dal összekötve: hét gyökérmappa, projektenkénti kontextusfájl, minden munkamenet után naplót író hookok, átnézett skillek."
+        en: "A single Obsidian vault wired to Claude Code and versioned with Git: seven root folders, per-project context files, hooks that write a log after every session, vetted skills.",
+        hu: "Egyetlen Obsidian-széf Claude Code-dal összekötve, Gittel verziózva: hét gyökérmappa, projektenkénti kontextusfájl, minden munkamenet után naplót író hookok, átnézett skillek."
       },
       role: { en: "System design", hu: "Rendszertervezés" },
       stack: ["Markdown", "Obsidian", "Claude Code", "Hooks", "Git"],
@@ -102,8 +103,8 @@ window.PORTFOLIO = {
       status: "live",
       kind: { en: "Website", hu: "Weboldal" },
       summary: {
-        en: "Zero images, zero frameworks. Monochrome liquid glass in plain HTML, CSS and JavaScript, with live data from the GitHub API.",
-        hu: "Nulla kép, nulla keretrendszer. Monokróm liquid glass sima HTML-ben, CSS-ben és JavaScriptben, élő adatokkal a GitHub API-ból."
+        en: "Zero images, zero frameworks. Monochrome liquid glass in plain HTML, CSS and JavaScript, with live data from the GitHub API and a generated PDF résumé.",
+        hu: "Nulla kép, nulla keretrendszer. Monokróm liquid glass sima HTML-ben, CSS-ben és JavaScriptben, élő GitHub-adatokkal és generált PDF-önéletrajzzal."
       },
       role: { en: "Design & development", hu: "Dizájn és fejlesztés" },
       stack: ["HTML", "CSS", "JavaScript", "GitHub API", "GitHub Pages"],
@@ -113,53 +114,28 @@ window.PORTFOLIO = {
       ],
       links: [],
       repo: "bizaza-devs.github.io"
-    },
-    {
-      id: "hockey",
-      name: "Hockey Stats",
-      year: "2027",
-      status: "planned",
-      kind: { en: "Full-stack app", hu: "Full-stack app" },
-      summary: {
-        en: "Games, goals, assists, practice load and progress charts for players and a whole team — built for the sport I have played since I was four.",
-        hu: "Meccsek, gólok, gólpasszok, edzésterhelés és fejlődés-grafikonok játékosnak és csapatnak — a sporthoz, amit négyéves korom óta űzök."
-      },
-      role: { en: "Solo project", hu: "Saját projekt" },
-      stack: ["React", "Node.js", "SQL"],
-      metrics: [{ k: { en: "phase", hu: "fázis" }, v: "spec" }],
-      links: [],
-      repo: null
     }
   ],
 
-  /* level: using | learning | next */
+  /* level: using | learning */
   stack: [
     {
       group: { en: "Front-end", hu: "Front-end" },
       items: [
         { name: "HTML", level: "using" },
         { name: "CSS", level: "using" },
-        { name: "JavaScript", level: "learning" },
         { name: "Liquid", level: "using" },
-        { name: "React", level: "next" }
+        { name: "JavaScript", level: "learning" }
       ]
     },
     {
       group: { en: "Platforms & tools", hu: "Platformok, eszközök" },
       items: [
         { name: "Shopify", level: "using" },
-        { name: "Git", level: "learning" },
-        { name: "GitHub", level: "learning" },
         { name: "Obsidian", level: "using" },
-        { name: "Claude Code", level: "using" }
-      ]
-    },
-    {
-      group: { en: "Back-end & data", hu: "Back-end, adat" },
-      items: [
-        { name: "Node.js", level: "next" },
-        { name: "SQL", level: "next" },
-        { name: "Python", level: "next" }
+        { name: "Claude Code", level: "using" },
+        { name: "Git", level: "learning" },
+        { name: "GitHub", level: "learning" }
       ]
     },
     {
@@ -167,57 +143,37 @@ window.PORTFOLIO = {
       items: [
         { name: "Brand design", level: "using" },
         { name: "E-commerce ops", level: "using" },
-        { name: "Production", level: "learning" },
-        { name: "English", level: "learning" }
+        { name: "Production", level: "learning" }
+      ]
+    },
+    {
+      group: { en: "Languages", hu: "Nyelvek" },
+      items: [
+        { name: { en: "Hungarian — native", hu: "Magyar — anyanyelv" }, level: "using" },
+        { name: { en: "English", hu: "Angol" }, level: "learning" }
       ]
     }
   ],
 
-  /* state: done | now | next */
+  /* Iskolák — az önéletrajzban és a főoldal fejlécében */
   education: [
     {
-      when: "2026",
-      state: "now",
-      title: { en: "Secondary school — Mathematics & Informatics specialisation", hu: "Gimnázium — matematika és informatika fakultáció" },
-      detail: { en: "School name to be added.", hu: "Az iskola neve: kitöltendő." }
+      from: "2026-09", to: null,
+      school: "Creascola Két Tanítási Nyelvű Általános Iskola és Nyolcosztályos Gimnázium",
+      short: "Creascola",
+      place: "Budaörs",
+      detail: { en: "11th grade · Mathematics and Informatics specialisation", hu: "11. évfolyam · matematika és informatika fakultáció" }
     },
     {
-      when: "2026 —",
-      state: "now",
-      title: { en: "The Web Developer Bootcamp · The Complete JavaScript Course", hu: "The Web Developer Bootcamp · The Complete JavaScript Course" },
-      detail: { en: "Udemy — HTML, CSS, JavaScript, React, Node.js. Alongside: freeCodeCamp certifications.", hu: "Udemy — HTML, CSS, JavaScript, React, Node.js. Mellette: freeCodeCamp-certek." }
-    },
-    {
-      when: "2027 · 01",
-      state: "next",
-      title: { en: "Physics specialisation", hu: "Fizika fakultáció" },
-      detail: { en: "Added for the KTH entry requirements.", hu: "A KTH felvételi feltételei miatt." }
-    },
-    {
-      when: "2027 · 05",
-      state: "next",
-      title: { en: "Early matura — Informatics & English", hu: "Előrehozott érettségi — informatika és angol" },
-      detail: { en: "Followed by advanced-level Informatics in autumn 2027.", hu: "Utána emelt informatika 2027 őszén." }
-    },
-    {
-      when: "2028 · 02",
-      state: "next",
-      title: { en: "IELTS Academic — target 6.5", hu: "IELTS Academic — cél: 6.5" },
-      detail: { en: "Plus advanced-level Mathematics matura in May 2028.", hu: "Plusz emelt matematika érettségi 2028 májusában." }
-    },
-    {
-      when: "2028 · 08",
-      state: "next",
-      title: { en: "BSc — KTH ICT · Gothenburg SEM · ELTE CS", hu: "BSc — KTH ICT · Göteborg SEM · ELTE PTI" },
-      detail: { en: "Three planned routes, one destination.", hu: "Három terv, egy cél." }
-    },
-    {
-      when: "2031",
-      state: "next",
-      title: { en: "MSc — KTH Computer Science", hu: "MSc — KTH Computer Science" },
-      detail: { en: "Ranked: Computer Science · Technology-based Entrepreneurship · Interactive Media Technology · Machine Learning.", hu: "Sorrend: Computer Science · Technology-based Entrepreneurship · Interactive Media Technology · Machine Learning." }
+      from: "2024-09", to: "2026-06",
+      school: "Bálint Márton Általános Iskola és Középiskola",
+      short: "Bálint Márton",
+      place: "Törökbálint",
+      detail: { en: "Grades 9–10", hu: "9–10. évfolyam" }
     }
   ],
+
+  interests: { en: ["Ice hockey (since age 4)", "Streetwear & fashion", "Web design"], hu: ["Jégkorong (4 éves korom óta)", "Streetwear és divat", "Webdizájn"] },
 
   contact: {
     email: "",            // pl. "valami@gmail.com" — üresen nem jelenik meg
@@ -228,19 +184,26 @@ window.PORTFOLIO = {
   }
 };
 
+/* Életkor a születési dátumból */
+window.PORTFOLIO.age = (() => {
+  const b = new Date(window.PORTFOLIO.person.born + "T00:00:00"), n = new Date();
+  let a = n.getFullYear() - b.getFullYear();
+  if (n.getMonth() < b.getMonth() || (n.getMonth() === b.getMonth() && n.getDate() < b.getDate())) a--;
+  return a;
+})();
+
 /* Felületi szövegek */
 window.UI = {
   en: {
-    nav: ["Index", "Work", "Stack", "Path", "GitHub", "Contact"],
-    now: "Now",
+    nav: ["Index", "Work", "Stack", "GitHub", "Contact"],
     local: "Local time",
     work: "Selected work",
-    workSub: "Things I have built, am building, or will build next.",
+    workSub: "What I have built and what I am building now.",
+    latest: "Latest public repositories",
+    latestSub: "Pulled live from GitHub — newest first.",
     stack: "Knowledge",
-    stackSub: "No percentages — just what I use daily, what I am learning, and what comes next.",
-    levels: { using: "Using", learning: "Learning", next: "Next" },
-    path: "Path",
-    pathSub: "Where I am, and the plan to Stockholm.",
+    stackSub: "No percentages — what I use daily and what I am learning right now.",
+    levels: { using: "Using", learning: "Learning" },
     gh: "GitHub activity",
     ghSub: "Live from the GitHub API.",
     contributions: "contributions in the last year",
@@ -254,25 +217,24 @@ window.UI = {
     ghError: "GitHub API unreachable right now (rate limit?). Try again in a few minutes.",
     contact: "Contact",
     contactSub: "Internships, collaborations, or just a hello.",
-    status: { live: "Live", building: "Building", planned: "Planned" },
+    status: { live: "Live", building: "Building" },
     role: "Role",
-    source: "Source",
+    cv: "Download CV",
     palette: "Type a command…",
     built: "Built with HTML, CSS & JavaScript. 0 images.",
     updated: "Updated",
     less: "Less", more: "More"
   },
   hu: {
-    nav: ["Kezdő", "Munkák", "Tudás", "Út", "GitHub", "Kapcsolat"],
-    now: "Most",
+    nav: ["Kezdő", "Munkák", "Tudás", "GitHub", "Kapcsolat"],
     local: "Helyi idő",
     work: "Munkák",
-    workSub: "Amit megépítettem, amin dolgozom, és ami következik.",
+    workSub: "Amit megépítettem, és amin most dolgozom.",
+    latest: "Legújabb nyilvános repók",
+    latestSub: "Élőben a GitHubról — a legújabb elöl.",
     stack: "Tudás",
-    stackSub: "Nincsenek százalékok — csak az, amit napi szinten használok, amit tanulok, és ami jön.",
-    levels: { using: "Használom", learning: "Tanulom", next: "Következik" },
-    path: "Út",
-    pathSub: "Hol tartok, és a terv Stockholmig.",
+    stackSub: "Nincsenek százalékok — amit napi szinten használok, és amit most tanulok.",
+    levels: { using: "Használom", learning: "Tanulom" },
     gh: "GitHub-aktivitás",
     ghSub: "Élőben a GitHub API-ból.",
     contributions: "hozzájárulás az elmúlt évben",
@@ -282,13 +244,13 @@ window.UI = {
     languages: "Nyelvek",
     recent: "Legutóbbi aktivitás",
     noActivity: "Még nincs publikus aktivitás — jönnek az első commitok.",
-    noRepos: "Még nincs publikus repó.",
+    noRepos: "Még nincs nyilvános repó.",
     ghError: "A GitHub API most nem érhető el (lekérési limit?). Próbáld újra pár perc múlva.",
     contact: "Kapcsolat",
     contactSub: "Gyakornokság, közös munka, vagy csak egy szia.",
-    status: { live: "Élő", building: "Készül", planned: "Tervezett" },
+    status: { live: "Élő", building: "Készül" },
     role: "Szerep",
-    source: "Forrás",
+    cv: "Önéletrajz letöltése",
     palette: "Írj be egy parancsot…",
     built: "HTML, CSS és JavaScript. 0 kép.",
     updated: "Frissítve",

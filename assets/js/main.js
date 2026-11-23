@@ -7,7 +7,7 @@
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const SECTIONS = ["index", "work", "stack", "path", "github", "contact"];
+  const SECTIONS = ["index", "work", "stack", "github", "contact"];
 
   /* ---------- nyelv ---------- */
   const store = {
@@ -40,12 +40,15 @@
     $("#heroStatus").innerHTML = D.person.status
       .map((s, i, a) => `<div>${esc(t(s))}${i === a.length - 1 ? '<span class="caret"></span>' : ""}</div>`).join("");
 
-    $("#stats").innerHTML = D.stats.map((s) => `
+    $("#stats").innerHTML = D.stats.map((s) => {
+      const v = s.value === "age" ? D.age : s.value;
+      return `
       <div class="glass stat reveal">
-        <span class="stat__v" data-count="${typeof s.value === "number" ? s.value : ""}">${typeof s.value === "number" ? 0 : esc(s.value)}</span>
+        <span class="stat__v" data-count="${typeof v === "number" ? v : ""}">${typeof v === "number" ? 0 : esc(v)}</span>
         <span class="stat__k">${esc(t(s.label))}</span>
         <span class="stat__n mono">${esc(s.note)}</span>
-      </div>`).join("");
+      </div>`;
+    }).join("");
 
     $("#projects").innerHTML = D.projects.map((p, i) => {
       const links = [...(p.links || [])];
@@ -68,28 +71,18 @@
       </article>`;
     }).join("");
 
-    $("#legend").innerHTML = ["using", "learning", "next"].map((l) => `<span><i class="lv lv--${l}"></i>${esc(U.levels[l])}</span>`).join("");
+    $("#legend").innerHTML = ["using", "learning"].map((l) => `<span><i class="lv lv--${l}"></i>${esc(U.levels[l])}</span>`).join("");
     $("#stackGrid").innerHTML = D.stack.map((g) => `
       <div class="glass stack__group reveal">
         <h3 class="mono small">${esc(t(g.group))}</h3>
-        ${g.items.map((it) => `<div class="stack__item" data-level="${it.level}"><span>${esc(it.name)}</span><i class="lv lv--${it.level}" title="${esc(U.levels[it.level])}"></i></div>`).join("")}
+        ${g.items.map((it) => `<div class="stack__item" data-level="${it.level}"><span>${esc(t(it.name))}</span><i class="lv lv--${it.level}" title="${esc(U.levels[it.level])}"></i></div>`).join("")}
       </div>`).join("");
 
-    $("#timeline").innerHTML = D.education.map((e, i, a) => {
-      const firstNow = e.state === "now" && a.findIndex((x) => x.state === "now") === i;
-      return `
-      <li class="tl" data-state="${e.state}">
-        <div class="tl__when">${esc(e.when)}</div>
-        <div class="tl__rail"><span class="tl__node"></span></div>
-        <div class="tl__body">
-          <div class="tl__title">${esc(t(e.title))}${firstNow ? `<span class="tl__now">${esc(U.now)}</span>` : ""}</div>
-          <div class="tl__detail">${esc(t(e.detail))}</div>
-        </div>
-      </li>`;
-    }).join("");
 
+    $$(".cv-link").forEach((a) => { a.href = t(D.cvPdf); });
     const c = D.contact;
     $("#contactLinks").innerHTML = [
+      `<a class="btn btn--solid" href="${esc(t(D.cvPdf))}" download>${esc(U.cv)} · PDF ↓</a>`,
       c.email ? `<a class="btn btn--solid" href="mailto:${esc(c.email)}">${esc(c.email)}</a>` : "",
       ...c.links.map((l) => `<a class="btn" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`)
     ].join("");
@@ -169,6 +162,7 @@
       ...SECTIONS.map((id, i) => ({ label: U.nav[i], hint: "#" + id, run: () => document.getElementById(id).scrollIntoView() })),
       ...D.projects.map((p) => ({ label: p.name, hint: t(p.kind), run: () => document.getElementById("p-" + p.id).scrollIntoView({ block: "center" }) })),
       { label: lang === "en" ? "Magyar nyelv" : "English", hint: "lang", run: toggleLang },
+      { label: ui().cv, hint: "PDF", run: () => { const a = document.createElement("a"); a.href = t(D.cvPdf); a.download = ""; a.click(); } },
       { label: "GitHub ↗", hint: "@" + D.github, run: () => open(`https://github.com/${D.github}`, "_blank", "noopener") },
       ...(D.contact.email ? [{ label: "Email ↗", hint: D.contact.email, run: () => (location.href = "mailto:" + D.contact.email) }] : [])
     ];
@@ -263,12 +257,16 @@
         ? top.map(([k, v], i) => `<li><span><i style="background:${shades[i]}"></i>${esc(k)}</span><span>${((v / total) * 100).toFixed(1)}%</span></li>`).join("")
         : `<li class="empty">${esc(U.noRepos)}</li>`;
 
-      const list = own.slice(0, 4);
+      // csak a legújabb nyilvános projektek: létrehozás szerint, a profil-README repó nélkül
+      const list = own
+        .filter((r) => r.name.toLowerCase() !== D.github.toLowerCase())
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+        .slice(0, 6);
       $("#ghRepoList").innerHTML = list.length ? list.map((r) => `
         <a class="glass repo reveal is-in" href="${esc(r.html_url)}" target="_blank" rel="noopener">
           <span class="repo__name">${esc(r.name)}</span>
           <span class="repo__desc">${esc(r.description || "—")}</span>
-          <span class="repo__meta"><span>${esc(r.language || "")}</span><span>★ ${r.stargazers_count}</span><span>${rel(r.pushed_at)}</span></span>
+          <span class="repo__meta"><span>${esc(r.language || "")}</span><span>★ ${r.stargazers_count}</span><span>${rel(r.created_at)}</span></span>
         </a>`).join("") : `<div class="glass repo"><span class="empty">${esc(U.noRepos)}</span></div>`;
     }
     if (events) {

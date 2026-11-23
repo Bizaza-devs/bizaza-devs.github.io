@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zalan Birtalan — CV</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* Önéletrajz — A4, monokróm, szöveges (ATS-barát), kattintható linkek.
+       Ugyanabból a data.js-ből épül, mint a főoldal. ?lang=hu → magyar. */
+    @page { size: A4; margin: 0; }
+    :root { --ink: #0a0a0a; --ink-2: #4a4a4a; --ink-3: #8a8a8a; --rule: #e2e2e2; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: #e9e9e9; color: var(--ink); }
+    body { font: 400 9.5pt/1.42 "Geist", "Segoe UI", system-ui, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .mono { font-family: "Geist Mono", ui-monospace, Consolas, monospace; }
+    a { color: inherit; text-decoration: none; }
+    .page { width: 210mm;  margin: 12mm auto; background: #fff; padding: 14mm 15mm 11mm; height: 297mm; overflow: hidden; display: grid; grid-template-columns: 1fr 58mm; grid-template-rows: auto 1fr auto; gap: 0 10mm; box-shadow: 0 10px 40px rgba(0,0,0,.12); }
+    @media print { html, body { background: #fff; } .page { margin: 0; box-shadow: none; } }
+
+    header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: end; gap: 8mm; padding-bottom: 6mm; margin-bottom: 6mm; border-bottom: 1.5pt solid var(--ink); }
+    h1 { margin: 0; font-size: 30pt; font-weight: 600; letter-spacing: -.04em; line-height: .95; }
+    .role { margin-top: 3mm; font-size: 8.5pt; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); }
+    .contact { text-align: right; font-size: 8.5pt; line-height: 1.7; color: var(--ink-2); }
+    .contact a { color: var(--ink); border-bottom: .5pt solid var(--ink-3); }
+
+    h2 { margin: 0 0 3.5mm; font: 500 7.5pt/1 "Geist Mono", monospace; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); }
+    section { margin-bottom: 5.5mm; break-inside: avoid; }
+    .summary { font-size: 10pt; line-height: 1.45; margin: 0; }
+
+    .item { margin-bottom: 3.6mm; break-inside: avoid; }
+    .item__head { display: flex; justify-content: space-between; align-items: baseline; gap: 4mm; }
+    .item__title { font-weight: 600; font-size: 10.5pt; letter-spacing: -.01em; }
+    .item__when { font-size: 8pt; color: var(--ink-3); white-space: nowrap; }
+    .item__sub { font-size: 8.5pt; color: var(--ink-2); margin-top: .6mm; }
+    .item p { margin: 1.4mm 0 0; color: #262626; }
+    .tags { margin-top: 1.6mm; font-size: 7.5pt; color: var(--ink-2); }
+    .tags span + span::before { content: " · "; color: var(--ink-3); }
+    .item__link { font-size: 8pt; border-bottom: .5pt solid var(--ink-3); }
+
+    aside section { margin-bottom: 5.5mm; }
+    .facts { display: grid; gap: 2.2mm; font-size: 9pt; }
+    .facts div { display: grid; }
+    .facts span:first-child { font-size: 7pt; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+    .skills { display: grid; gap: 1.5mm; font-size: 9pt; }
+    .skill { display: flex; justify-content: space-between; gap: 3mm; }
+    .skill i { flex: none; align-self: center; width: 9mm; height: 1.4mm; border-radius: 1mm; }
+    .skill i[data-l="using"] { background: var(--ink); }
+    .skill i[data-l="learning"] { background: linear-gradient(90deg, var(--ink) 50%, var(--rule) 50%); }
+    .skill-group { margin-bottom: 3.5mm; }
+    .skill-group h3 { margin: 0 0 1.5mm; font-size: 7.5pt; font-weight: 500; color: var(--ink-2); }
+    .legend { font-size: 7pt; color: var(--ink-3); margin-top: 1mm; display: flex; gap: 4mm; }
+    .legend i { display: inline-block; width: 5mm; height: 1.2mm; border-radius: 1mm; margin-right: 1.5mm; vertical-align: middle; }
+    ul.plain { margin: 0; padding: 0; list-style: none; font-size: 9pt; display: grid; gap: 1.2mm; }
+
+    footer { grid-column: 1 / -1; align-self: end; display: flex; justify-content: space-between; padding-top: 4mm; border-top: .5pt solid var(--rule); font-size: 7pt; color: var(--ink-3); }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div>
+        <h1 id="name"></h1>
+        <div class="role mono" id="role"></div>
+      </div>
+      <div class="contact mono" id="contact"></div>
+    </header>
+
+    <main>
+      <section>
+        <h2 id="hProfile"></h2>
+        <p class="summary" id="summary"></p>
+      </section>
+      <section>
+        <h2 id="hEdu"></h2>
+        <div id="education"></div>
+      </section>
+      <section>
+        <h2 id="hProjects"></h2>
+        <div id="projects"></div>
+      </section>
+    </main>
+
+    <aside>
+      <section>
+        <h2 id="hFacts"></h2>
+        <div class="facts" id="facts"></div>
+      </section>
+      <section>
+        <h2 id="hSkills"></h2>
+        <div id="skills"></div>
+      </section>
+      <section>
+        <h2 id="hInterests"></h2>
+        <ul class="plain" id="interests"></ul>
+      </section>
+    </aside>
+
+    <footer class="mono">
+      <span id="foot"></span>
+      <span id="footUrl"></span>
+    </footer>
+  </div>
+
+  <script src="assets/js/data.js"></script>
+  <script>
+    (() => {
+      const D = window.PORTFOLIO;
+      const lang = new URLSearchParams(location.search).get("lang") === "hu" ? "hu" : "en";
+      const t = (o) => (o && typeof o === "object" && !Array.isArray(o) ? o[lang] ?? o.en : o);
+      const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+      const $ = (id) => document.getElementById(id);
+      const site = "https://bizaza-devs.github.io";
+      const L = {
+        en: { profile: "Profile", projects: "Projects", edu: "Education", facts: "Details", skills: "Skills", interests: "Interests",
+              born: "Born", age: "years old", location: "Location", web: "Portfolio", now: "present",
+              using: "Using", learning: "Learning", role: "Role",
+              summary: `Student developer, ${D.age}, and founder of the streetwear brand ALAN BIRTH. I run the brand end to end — identity, production and a custom Shopify storefront that I develop and version myself. I build systems that keep work documented and reproducible, and I am deepening my skills in JavaScript and full-stack web development.`,
+              foot: "Generated from the same data as my portfolio" },
+        hu: { profile: "Bemutatkozás", projects: "Projektek", edu: "Tanulmányok", facts: "Adatok", skills: "Készségek", interests: "Érdeklődés",
+              born: "Született", age: "éves", location: "Lakhely", web: "Portfólió", now: "jelenleg",
+              using: "Használom", learning: "Tanulom", role: "Szerep",
+              summary: `${D.age} éves diák fejlesztő, az ALAN BIRTH streetwear brand alapítója. A brandet elejétől a végéig viszem: arculat, gyártás és egy egyedi Shopify-webshop, amit magam fejlesztek és verziózok. Olyan rendszereket építek, amelyekkel a munka dokumentált és visszakövethető, és most a JavaScriptet és a full-stack webfejlesztést mélyítem el.`,
+              foot: "A portfólióm adataiból generálva" }
+      }[lang];
+      const ym = (s) => s ? s.replace("-", ".") : L.now;
+
+      document.documentElement.lang = lang;
+      document.title = `${t(D.person.name)} — ${lang === "hu" ? "Önéletrajz" : "CV"}`;
+      $("name").innerHTML = t(D.person.name).split(" ").map(esc).join("<br>");
+      $("role").textContent = t(D.person.role);
+      $("contact").innerHTML = [
+        D.contact.email ? `<a href="mailto:${esc(D.contact.email)}">${esc(D.contact.email)}</a>` : "",
+        `<a href="${site}">${site.replace("https://", "")}</a>`,
+        `<a href="https://github.com/${esc(D.github)}">github.com/${esc(D.github)}</a>`,
+        `<a href="https://alanbirth.com">alanbirth.com</a>`,
+        esc(t(D.person.location))
+      ].filter(Boolean).join("<br>");
+
+      $("hProfile").textContent = L.profile;
+      $("summary").textContent = L.summary;
+
+      $("hProjects").textContent = L.projects;
+      $("projects").innerHTML = D.projects.map((p) => {
+        const url = p.repo ? `https://github.com/${D.github}/${p.repo}` : (p.links[0] && p.links[0].url);
+        return `<div class="item">
+          <div class="item__head"><span class="item__title">${esc(p.name)}</span><span class="item__when mono">${esc(p.year)}</span></div>
+          <div class="item__sub">${esc(t(p.role))}</div>
+          <p>${esc(t(p.summary))}</p>
+          <div class="tags mono">${p.stack.map((s) => `<span>${esc(s)}</span>`).join("")}${url ? ` &nbsp; <a class="item__link" href="${esc(url)}">${esc(url.replace("https://", ""))}</a>` : ""}</div>
+        </div>`;
+      }).join("");
+
+      $("hEdu").textContent = L.edu;
+      $("education").innerHTML = D.education.map((e) => `
+        <div class="item">
+          <div class="item__head"><span class="item__title">${esc(e.school)}</span><span class="item__when mono">${ym(e.from)} — ${ym(e.to)}</span></div>
+          <div class="item__sub">${esc(e.place)} · ${esc(t(e.detail))}</div>
+        </div>`).join("");
+
+      $("hFacts").textContent = L.facts;
+      const born = new Date(D.person.born + "T00:00:00");
+      const bornStr = new Intl.DateTimeFormat(lang === "hu" ? "hu-HU" : "en-GB", { year: "numeric", month: lang === "hu" ? "2-digit" : "long", day: "2-digit" }).format(born);
+      $("facts").innerHTML = [
+        [L.born, `${bornStr} (${D.age} ${L.age})`],
+        [L.location, t(D.person.location)],
+        [L.web, `<a href="${site}">${site.replace("https://", "")}</a>`]
+      ].map(([k, v]) => `<div><span class="mono">${esc(k)}</span><span>${v.startsWith("<a") ? v : esc(v)}</span></div>`).join("");
+
+      $("hSkills").textContent = L.skills;
+      $("skills").innerHTML = D.stack.map((g) => `
+        <div class="skill-group"><h3>${esc(t(g.group))}</h3>
+          <div class="skills">${g.items.map((i) => `<div class="skill"><span>${esc(t(i.name))}</span><i data-l="${i.level}"></i></div>`).join("")}</div>
+        </div>`).join("") +
+        `<div class="legend mono"><span><i style="background:var(--ink)"></i>${L.using}</span><span><i style="background:linear-gradient(90deg,var(--ink) 50%,var(--rule) 50%)"></i>${L.learning}</span></div>`;
+
+      $("hInterests").textContent = L.interests;
+      $("interests").innerHTML = t(D.interests).map((i) => `<li>${esc(i)}</li>`).join("");
+
+      $("foot").textContent = `${L.foot} · ${D.updated}`;
+      $("footUrl").innerHTML = `<a href="${site}">${site.replace("https://", "")}</a>`;
+    })();
+  </script>
+</body>
+</html>
