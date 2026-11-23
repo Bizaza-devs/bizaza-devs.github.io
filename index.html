@@ -25,19 +25,11 @@
     <div class="bg__vignette"></div>
   </div>
 
-  <!-- Liquid glass torzítás (Chromiumban a backdrop-filteren) -->
-  <svg class="sr-only" aria-hidden="true">
-    <filter id="liquid" x="0" y="0" width="100%" height="100%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.004 0.007" numOctaves="1" seed="7" result="n"/>
-      <feGaussianBlur in="n" stdDeviation="6" result="nb"/>
-      <feDisplacementMap in="SourceGraphic" in2="nb" scale="22" xChannelSelector="R" yChannelSelector="G"/>
-    </filter>
-  </svg>
 
   <div class="progress" aria-hidden="true"><span></span></div>
 
   <header class="nav-wrap">
-    <nav class="nav glass glass--liquid" aria-label="Main">
+    <nav class="nav glass" aria-label="Main">
       <a class="nav__mark" href="#index" aria-label="Home">ZB</a>
       <ul class="nav__links" id="navLinks"></ul>
       <div class="nav__tools">
@@ -50,7 +42,7 @@
   <main>
     <!-- HERO -->
     <section class="hero" id="index">
-      <div class="hero__card glass glass--lg glass--liquid reveal">
+      <div class="hero__card glass glass--lg reveal">
         <div class="hero__meta mono">
           <span class="dot dot--live"></span>
           <span id="heroLocation"></span>
@@ -137,7 +129,7 @@
 
     <!-- CONTACT -->
     <section class="section" id="contact">
-      <div class="contact glass glass--lg glass--liquid reveal">
+      <div class="contact glass glass--lg reveal">
         <span class="section__idx mono">04</span>
         <h2 data-ui="contact"></h2>
         <p data-ui="contactSub"></p>

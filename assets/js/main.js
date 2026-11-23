@@ -18,11 +18,6 @@
   const t = (o) => (o && typeof o === "object" ? o[lang] ?? o.en : o);
   const ui = () => window.UI[lang];
 
-  /* ---------- liquid támogatás (csak Chromium rendereli helyesen) ---------- */
-  if (navigator.userAgentData && CSS.supports("backdrop-filter", "url(#liquid)") && !reduced) {
-    document.documentElement.classList.add("has-liquid");
-  }
-
   /* ---------- renderelés ---------- */
   function render() {
     const U = ui();

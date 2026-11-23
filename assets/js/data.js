@@ -176,7 +176,7 @@ window.PORTFOLIO = {
   interests: { en: ["Ice hockey (since age 4)", "Streetwear & fashion", "Web design"], hu: ["Jégkorong (4 éves korom óta)", "Streetwear és divat", "Webdizájn"] },
 
   contact: {
-    email: "",            // pl. "valami@gmail.com" — üresen nem jelenik meg
+    email: "zalan.birtalan@gmail.com",   // üresen nem jelenik meg
     links: [
       { label: "GitHub", url: "https://github.com/Bizaza-devs" },
       { label: "alanbirth.com", url: "https://alanbirth.com" }
