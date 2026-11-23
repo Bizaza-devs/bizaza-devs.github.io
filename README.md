@@ -6,10 +6,10 @@ Monochrome liquid glass. **0 images, 0 frameworks, 0 dependencies** — plain HT
 
 ## Features
 - Liquid glass panels: `backdrop-filter` + an SVG displacement filter for real refraction (Chromium), graceful blur fallback elsewhere
-- All content in one file: [`assets/js/data.js`](assets/js/data.js) — English / Hungarian
+- All content in one file: [`assets/js/data.js`](assets/js/data.js)
 - Live GitHub data: contribution calendar, streaks, languages, recent activity, repositories
-- Downloadable one-page CV (EN/HU PDF), generated from the same data: `scripts/build-cv.ps1`
-- Command palette (`Ctrl K` / `⌘K` / `/`), scroll progress, live local clock
+- Downloadable one-page CV (PDF), generated from the same data: `scripts/build-cv.ps1`
+- Hidden command palette (`Ctrl K` / `⌘K` / `/`), scroll progress, live local clock
 - Responsive down to 320 px, respects `prefers-reduced-motion`
 
 ## Run locally

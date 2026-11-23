@@ -10,7 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     /* Önéletrajz — A4, monokróm, szöveges (ATS-barát), kattintható linkek.
-       Ugyanabból a data.js-ből épül, mint a főoldal. ?lang=hu → magyar. */
+       Ugyanabból a data.js-ből épül, mint a főoldal. Csak angol. */
     @page { size: A4; margin: 0; }
     :root { --ink: #0a0a0a; --ink-2: #4a4a4a; --ink-3: #8a8a8a; --rule: #e2e2e2; }
     * { box-sizing: border-box; }
@@ -109,7 +109,7 @@
   <script>
     (() => {
       const D = window.PORTFOLIO;
-      const lang = new URLSearchParams(location.search).get("lang") === "hu" ? "hu" : "en";
+      const lang = "en";
       const t = (o) => (o && typeof o === "object" && !Array.isArray(o) ? o[lang] ?? o.en : o);
       const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
       const $ = (id) => document.getElementById(id);
@@ -119,17 +119,12 @@
               born: "Born", age: "years old", location: "Location", web: "Portfolio", now: "present",
               using: "Using", learning: "Learning", role: "Role",
               summary: `Student developer, ${D.age}, and founder of the streetwear brand ALAN BIRTH. I run the brand end to end — identity, production and a custom Shopify storefront that I develop and version myself. I build systems that keep work documented and reproducible, and I am deepening my skills in JavaScript and full-stack web development.`,
-              foot: "Generated from the same data as my portfolio" },
-        hu: { profile: "Bemutatkozás", projects: "Projektek", edu: "Tanulmányok", facts: "Adatok", skills: "Készségek", interests: "Érdeklődés",
-              born: "Született", age: "éves", location: "Lakhely", web: "Portfólió", now: "jelenleg",
-              using: "Használom", learning: "Tanulom", role: "Szerep",
-              summary: `${D.age} éves diák fejlesztő, az ALAN BIRTH streetwear brand alapítója. A brandet elejétől a végéig viszem: arculat, gyártás és egy egyedi Shopify-webshop, amit magam fejlesztek és verziózok. Olyan rendszereket építek, amelyekkel a munka dokumentált és visszakövethető, és most a JavaScriptet és a full-stack webfejlesztést mélyítem el.`,
-              foot: "A portfólióm adataiból generálva" }
+              foot: "Generated from the same data as my portfolio" }
       }[lang];
       const ym = (s) => s ? s.replace("-", ".") : L.now;
 
       document.documentElement.lang = lang;
-      document.title = `${t(D.person.name)} — ${lang === "hu" ? "Önéletrajz" : "CV"}`;
+      document.title = `${t(D.person.name)} — CV`;
       $("name").innerHTML = t(D.person.name).split(" ").map(esc).join("<br>");
       $("role").textContent = t(D.person.role);
       $("contact").innerHTML = [
@@ -163,7 +158,7 @@
 
       $("hFacts").textContent = L.facts;
       const born = new Date(D.person.born + "T00:00:00");
-      const bornStr = new Intl.DateTimeFormat(lang === "hu" ? "hu-HU" : "en-GB", { year: "numeric", month: lang === "hu" ? "2-digit" : "long", day: "2-digit" }).format(born);
+      const bornStr = new Intl.DateTimeFormat("en-GB", { year: "numeric", month: "long", day: "2-digit" }).format(born);
       $("facts").innerHTML = [
         [L.born, `${bornStr} (${D.age} ${L.age})`],
         [L.location, t(D.person.location)],

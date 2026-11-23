@@ -9,21 +9,16 @@
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const SECTIONS = ["index", "work", "stack", "github", "contact"];
 
-  /* ---------- nyelv ---------- */
-  const store = {
-    get(k) { try { return localStorage.getItem(k); } catch { return null; } },
-    set(k, v) { try { localStorage.setItem(k, v); } catch {} }
-  };
-  let lang = store.get("lang") || ((navigator.language || "").toLowerCase().startsWith("hu") ? "hu" : "en");
-  const t = (o) => (o && typeof o === "object" ? o[lang] ?? o.en : o);
-  const ui = () => window.UI[lang];
+  /* ---------- csak angol ---------- */
+  const lang = "en";
+  const t = (o) => (o && typeof o === "object" && !Array.isArray(o) ? o.en : o);
+  const ui = () => window.UI;
 
   /* ---------- renderelés ---------- */
   function render() {
     const U = ui();
     document.documentElement.lang = lang;
     document.title = `${t(D.person.name)} — Portfolio`;
-    $("#langBtn").textContent = lang === "en" ? "HU" : "EN";
     $$("[data-ui]").forEach((el) => { el.textContent = U[el.dataset.ui]; });
 
     $("#navLinks").innerHTML = SECTIONS.map((id, i) => `<li><a href="#${id}" data-nav="${id}">${U.nav[i]}</a></li>`).join("");
@@ -35,13 +30,13 @@
     $("#heroStatus").innerHTML = D.person.status
       .map((s, i, a) => `<div>${esc(t(s))}${i === a.length - 1 ? '<span class="caret"></span>' : ""}</div>`).join("");
 
-    $("#stats").innerHTML = D.stats.map((s) => {
+    $("#stats").innerHTML = D.stats.map((s, i) => {
       const v = s.value === "age" ? D.age : s.value;
       return `
-      <div class="glass stat reveal">
-        <span class="stat__v" data-count="${typeof v === "number" ? v : ""}">${typeof v === "number" ? 0 : esc(v)}</span>
-        <span class="stat__k">${esc(t(s.label))}</span>
-        <span class="stat__n mono">${esc(s.note)}</span>
+      <div class="stat">
+        <div class="stat__top mono"><span>${String(i + 1).padStart(2, "0")}</span><span>${esc(s.label)}</span></div>
+        <div class="stat__v mono"><span data-count="${v}">0</span>${s.unit ? `<small>${esc(s.unit)}</small>` : ""}</div>
+        <div class="stat__n">${esc(s.note)}</div>
       </div>`;
     }).join("");
 
@@ -145,8 +140,6 @@
   }, { passive: true });
 
   /* ---------- nyelvváltás ---------- */
-  function toggleLang() { lang = lang === "en" ? "hu" : "en"; store.set("lang", lang); render(); }
-  $("#langBtn").addEventListener("click", toggleLang);
 
   /* ---------- parancspaletta ---------- */
   const pal = $("#palette"), pin = $("#paletteInput"), plist = $("#paletteList");
@@ -156,7 +149,6 @@
     return [
       ...SECTIONS.map((id, i) => ({ label: U.nav[i], hint: "#" + id, run: () => document.getElementById(id).scrollIntoView() })),
       ...D.projects.map((p) => ({ label: p.name, hint: t(p.kind), run: () => document.getElementById("p-" + p.id).scrollIntoView({ block: "center" }) })),
-      { label: lang === "en" ? "Magyar nyelv" : "English", hint: "lang", run: toggleLang },
       { label: ui().cv, hint: "PDF", run: () => { const a = document.createElement("a"); a.href = t(D.cvPdf); a.download = ""; a.click(); } },
       { label: "GitHub ↗", hint: "@" + D.github, run: () => open(`https://github.com/${D.github}`, "_blank", "noopener") },
       ...(D.contact.email ? [{ label: "Email ↗", hint: D.contact.email, run: () => (location.href = "mailto:" + D.contact.email) }] : [])
@@ -171,7 +163,6 @@
   function openPalette() { pal.hidden = false; pin.value = ""; pin.placeholder = ui().palette; sel = 0; drawPalette(); pin.focus(); }
   function closePalette() { pal.hidden = true; }
   function runSel() { const c = items[sel]; closePalette(); c?.run(); }
-  $("#cmdBtn").addEventListener("click", openPalette);
   pin.addEventListener("input", () => { sel = 0; drawPalette(); });
   plist.addEventListener("click", (e) => { const li = e.target.closest("li"); if (li) { sel = +li.dataset.i; runSel(); } });
   pal.addEventListener("click", (e) => { if (e.target === pal) closePalette(); });
@@ -183,8 +174,6 @@
     else if (e.key === "ArrowUp") { e.preventDefault(); sel = (sel - 1 + items.length) % Math.max(1, items.length); drawPalette(); }
     else if (e.key === "Enter") { e.preventDefault(); runSel(); }
   });
-  if (matchMedia("(pointer: coarse)").matches) $("#cmdBtn").innerHTML = "<kbd>MENU</kbd>";
-  else if (!/Mac|iPhone|iPad/.test(navigator.platform)) $("#cmdBtn").innerHTML = "<kbd>Ctrl K</kbd>";
 
   /* ============================================================
      GitHub
@@ -275,7 +264,7 @@
       $("#ghTotal").textContent = cal.total?.lastYear ?? days.reduce((a, d) => a + d.count, 0);
       const s = streaks(days);
       $("#ghStreak").textContent = `${s.cur}/${s.best}`;
-      $("#ghStreakLabel").textContent = lang === "hu" ? "sorozat / rekord (nap)" : "streak / best (days)";
+      $("#ghStreakLabel").textContent = "streak / best (days)";
 
       const pad = new Date(days[0].date + "T00:00:00").getDay(); // vasárnap = 0, mint a GitHubon
       const cells = Array(pad).fill('<i style="visibility:hidden"></i>');

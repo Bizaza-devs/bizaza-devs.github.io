@@ -15,8 +15,7 @@ Start-Sleep -Seconds 2
 try {
   New-Item -ItemType Directory -Force (Join-Path $root "cv") | Out-Null
   $jobs = @(
-    @{ lang = "en"; out = "cv\Zalan-Birtalan-CV.pdf" },
-    @{ lang = "hu"; out = "cv\Birtalan-Zalan-oneletrajz.pdf" }
+    @{ lang = "en"; out = "cv\Zalan-Birtalan-CV.pdf" }
   )
   foreach ($j in $jobs) {
     $out = Join-Path $root $j.out
