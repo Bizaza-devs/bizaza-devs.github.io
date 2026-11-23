@@ -1,0 +1,73 @@
+{
+  "generated": "2026-11-23T14:57:32+01:00",
+  "timezone": "Europe/Budapest",
+  "days": [
+    {
+      "date": "2026-11-02",
+      "prompts": 8,
+      "sessions": 3,
+      "tokens": 993386
+    },
+    {
+      "date": "2026-11-03",
+      "prompts": 4,
+      "sessions": 2,
+      "tokens": 215327
+    },
+    {
+      "date": "2026-11-08",
+      "prompts": 7,
+      "sessions": 1,
+      "tokens": 375022
+    },
+    {
+      "date": "2026-11-10",
+      "prompts": 30,
+      "sessions": 8,
+      "tokens": 3126418
+    },
+    {
+      "date": "2026-11-11",
+      "prompts": 10,
+      "sessions": 3,
+      "tokens": 489445
+    },
+    {
+      "date": "2026-11-13",
+      "prompts": 6,
+      "sessions": 2,
+      "tokens": 574844
+    },
+    {
+      "date": "2026-11-15",
+      "prompts": 3,
+      "sessions": 2,
+      "tokens": 794790
+    },
+    {
+      "date": "2026-11-16",
+      "prompts": 21,
+      "sessions": 9,
+      "tokens": 2813589
+    },
+    {
+      "date": "2026-11-17",
+      "prompts": 4,
+      "sessions": 3,
+      "tokens": 394488
+    },
+    {
+      "date": "2026-11-23",
+      "prompts": 42,
+      "sessions": 3,
+      "tokens": 3138024
+    }
+  ],
+  "totals": {
+    "prompts": 135,
+    "sessions": 36,
+    "tokens": 12915333,
+    "activeDays": 10,
+    "firstDay": "2026-11-02"
+  }
+}

@@ -147,7 +147,7 @@ window.PORTFOLIO.age = (() => {
 
 /* Interface strings */
 window.UI = {
-  nav: ["Index", "Work", "Stack", "GitHub", "Contact"],
+  nav: ["Index", "Work", "Stack", "Activity", "Contact"],
   local: "Local time",
   work: "Selected work",
   workSub: "What I have built and what I am building now.",
@@ -156,8 +156,8 @@ window.UI = {
   stack: "Knowledge",
   stackSub: "No percentages — what I use daily and what I am learning right now.",
   levels: { using: "Using", learning: "Learning" },
-  gh: "GitHub activity",
-  ghSub: "Live from the GitHub API.",
+  gh: "Work activity",
+  ghSub: "Shipping code on GitHub and building with Claude — one calendar.",
   contributions: "contributions in the last year",
   repos: "Repositories",
   stars: "Stars",

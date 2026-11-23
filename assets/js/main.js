@@ -9,7 +9,7 @@
   const set = (sel, fn) => { const el = $(sel); if (el) fn(el); }; // hiányzó elem ne állítsa le az oldalt
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const SECTIONS = ["index", "work", "stack", "github", "contact"];
+  const SECTIONS = ["index", "work", "stack", "activity", "contact"];
   const ACCENT = { coral: "var(--coral)", violet: "var(--violet)", blue: "var(--blue)", lime: "var(--lime)" };
   const school = D.education.find((e) => !e.to) || D.education[0];
 
@@ -202,9 +202,12 @@
   }
 
   /* ============================================================
-     GitHub
+     Work activity — GitHub + Claude egy naptárban
      ============================================================ */
   const palette = ["#c8ff3d", "#a35bff", "#4d6bfe", "#ff5b3a", "#ffd23f", "#3ddcff"];
+  const compact = new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 });
+  const dayFmt = new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
+  const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
   function rel(date) {
     const s = (Date.now() - new Date(date)) / 1000;
@@ -230,83 +233,177 @@
     }
   }
 
-  function streaks(days) {
+  // az utolsó 53 hét napjai, vasárnappal kezdve (mint a GitHubon)
+  function buildDays(ghCal, claude) {
+    const gh = {}, cl = {};
+    (ghCal?.contributions || []).forEach((d) => { gh[d.date] = d.count; });
+    (claude?.days || []).forEach((d) => { cl[d.date] = d; });
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const start = new Date(today); start.setDate(start.getDate() - 364); start.setDate(start.getDate() - start.getDay());
+    const days = [];
+    for (const d = new Date(start); d <= today; d.setDate(d.getDate() + 1)) {
+      const k = iso(d), c = cl[k];
+      days.push({ date: k, dow: d.getDay(), code: gh[k] || 0, prompts: c?.prompts || 0, sessions: c?.sessions || 0, tokens: c?.tokens || 0 });
+    }
+    return days;
+  }
+
+  // 4 szint a 95. percentilishez mérve, hogy egy kiugró nap ne nyomja el a többit
+  function scaler(vals) {
+    const nz = vals.filter((v) => v > 0).sort((a, b) => a - b);
+    const top = nz.length ? nz[Math.min(nz.length - 1, Math.floor(nz.length * 0.95))] : 1;
+    return (v) => (v <= 0 ? 0 : Math.min(1, v / top));
+  }
+  const level = (x) => (x <= 0 ? 0 : x < 0.25 ? 1 : x < 0.5 ? 2 : x < 0.8 ? 3 : 4);
+
+  function streaks(days, active) {
     let cur = 0, best = 0, run = 0;
-    days.forEach((d) => { run = d.count > 0 ? run + 1 : 0; best = Math.max(best, run); });
-    const today = new Date().toISOString().slice(0, 10);
-    const past = days.filter((d) => d.date <= today);
-    let i = past.length - 1;
-    if (i >= 0 && past[i].count === 0) i--; // a mai nap még lehet üres
-    while (i >= 0 && past[i].count > 0) { cur++; i--; }
+    days.forEach((d) => { run = active(d) ? run + 1 : 0; best = Math.max(best, run); });
+    let i = days.length - 1;
+    if (i >= 0 && !active(days[i])) i--; // a mai nap még lehet üres
+    while (i >= 0 && active(days[i])) { cur++; i--; }
     return { cur, best };
   }
 
-  function renderGitHub({ user, repos, events, cal }) {
+  let ACT = null, mode = "all";
+
+  function renderActivity() {
+    if (!ACT) return;
+    const { days, claude, user, repos } = ACT;
+    const sc = scaler(days.map((d) => d.code)), sp = scaler(days.map((d) => d.prompts));
+    const isOn = { all: (d) => d.code > 0 || d.prompts > 0, code: (d) => d.code > 0, claude: (d) => d.prompts > 0 }[mode];
+
+    set("#actCal", (el) => {
+      const cells = days.map((d, i) => {
+        const c = sc(d.code), p = sp(d.prompts);
+        let k = "", l = 0;
+        if (mode === "code") { k = c ? "code" : ""; l = level(c); }
+        else if (mode === "claude") { k = p ? "claude" : ""; l = level(p); }
+        else if (c || p) { k = c && p ? (c > p * 2 ? "code" : p > c * 2 ? "claude" : "both") : c ? "code" : "claude"; l = level(Math.max(c, p)); }
+        const delay = reduced ? 0 : Math.min(900, Math.floor(i / 7) * 14);
+        return `<i data-i="${i}"${k ? ` data-k="${k}"` : ""} data-l="${l}" style="animation-delay:${delay}ms"></i>`;
+      });
+      el.innerHTML = cells.join("");
+    });
+    const mf = new Intl.DateTimeFormat("en", { month: "short" });
+    const months = [];
+    for (let i = 0; i < days.length; i += 61) months.push(mf.format(new Date(days[i].date + "T00:00:00")));
+    set("#actMonths", (el) => { el.innerHTML = months.map((m) => `<span>${esc(m)}</span>`).join(""); });
+
+    const yr = days.reduce((a, d) => ({ code: a.code + d.code, prompts: a.prompts + d.prompts, sessions: a.sessions + d.sessions, tokens: a.tokens + d.tokens }), { code: 0, prompts: 0, sessions: 0, tokens: 0 });
+    const activeDays = days.filter(isOn).length;
+    const total = { all: activeDays, code: yr.code, claude: yr.prompts }[mode];
+    const label = { all: "active days in the last year", code: "contributions in the last year", claude: "Claude prompts in the last year" }[mode];
+    set("#actTotal", (el) => { el.textContent = total.toLocaleString("en"); el.style.setProperty("--act-grad", { all: "var(--grad)", code: "var(--lime)", claude: "var(--violet)" }[mode]); });
+    set("#actTotalLabel", (el) => { el.textContent = label; });
+    set("#actLegend", (el) => {
+      el.innerHTML = mode === "all"
+        ? `<span><i style="background:var(--lime)"></i>Code (GitHub)</span><span><i style="background:var(--violet)"></i>Claude</span><span><i style="background:linear-gradient(135deg,var(--lime),var(--violet))"></i>Both</span>`
+        : `<span>Less</span>${[1, 2, 3, 4].map((l) => `<i style="background:var(--${mode === "code" ? "lime" : "violet"});opacity:${[0.32, 0.55, 0.8, 1][l - 1]}"></i>`).join("")}<span>More</span>`;
+    });
+
+    const st = streaks(days, isOn);
+    const own = (repos || []).filter((r) => !r.fork);
+    const kpis = [
+      ["Contributions", yr.code, "lime"],
+      ["Repositories", own.length, "lime"],
+      ["Claude prompts", yr.prompts, "violet"],
+      ["Claude sessions", yr.sessions, "violet"],
+      ["Tokens", compact.format(yr.tokens), "blue"],
+      ["Active days", activeDays, "coral"],
+      ["Streak", `${st.cur}d`, "coral"],
+      ["Best streak", `${st.best}d`, "blue"]
+    ];
+    set("#actKpis", (el) => {
+      el.innerHTML = kpis.map(([k, v, c]) => `<div class="card kpi" style="--accent:var(--${c})"><span class="kpi__v">${esc(v)}</span><span class="kpi__k mono">${esc(k)}</span></div>`).join("");
+    });
+
+    // aktív napok a hét napjai szerint
+    const names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], order = [1, 2, 3, 4, 5, 6, 0];
+    const per = [0, 0, 0, 0, 0, 0, 0];
+    days.forEach((d) => { if (isOn(d)) per[d.dow]++; });
+    const max = Math.max(1, ...per);
+    set("#actWeek", (el) => {
+      el.innerHTML = order.map((w, i) => `<div><b style="height:${Math.max(3, (per[w] / max) * 100)}%;animation-delay:${i * 60}ms"></b><span><span class="n">${per[w]}</span><br>${names[w]}</span></div>`).join("");
+    });
+
     if (user) set("#ghFollowers", (el) => { el.textContent = user.followers; });
-    if (repos) {
-      const own = repos.filter((r) => !r.fork);
-      set("#ghRepos", (el) => { el.textContent = own.length; });
-      set("#ghStars", (el) => { el.textContent = own.reduce((a, r) => a + r.stargazers_count, 0); });
-
-      const langs = {};
-      own.forEach((r) => { if (r.language) langs[r.language] = (langs[r.language] || 0) + (r.size || 1); });
-      const total = Object.values(langs).reduce((a, b) => a + b, 0);
-      const top = Object.entries(langs).sort((a, b) => b[1] - a[1]).slice(0, 6);
-      set("#ghLangBar", (el) => { el.innerHTML = top.map(([, v], i) => `<span style="width:${(v / total) * 100}%;background:${palette[i]}"></span>`).join(""); });
-      set("#ghLangList", (el) => {
-        el.innerHTML = top.length
-          ? top.map(([k, v], i) => `<li><span><i style="background:${palette[i]}"></i>${esc(k)}</span><span>${((v / total) * 100).toFixed(1)}%</span></li>`).join("")
-          : `<li class="empty">${esc(U.noRepos)}</li>`;
-      });
-
-      // csak a legújabb nyilvános projektek: létrehozás szerint, a profil-README repó nélkül
-      const list = own
-        .filter((r) => r.name.toLowerCase() !== D.github.toLowerCase())
-        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-        .slice(0, 6);
-      set("#ghRepoList", (el) => {
-        el.innerHTML = list.length ? list.map((r) => `
-          <a class="card repo" href="${esc(r.html_url)}" target="_blank" rel="noopener">
-            <span class="repo__name">${esc(r.name)}</span>
-            <span class="repo__desc">${esc(r.description || "—")}</span>
-            <span class="repo__meta"><span>${esc(r.language || "")}</span><span>★ ${r.stargazers_count}</span><span>${rel(r.created_at)}</span></span>
-          </a>`).join("") : `<div class="card repo"><span class="empty">${esc(U.noRepos)}</span></div>`;
-      });
-    }
-    if (events) {
-      const ev = events.slice(0, 7);
-      set("#ghFeed", (el) => {
-        el.innerHTML = ev.length
-          ? ev.map((e) => `<li><span>${describe(e)}</span><time datetime="${esc(e.created_at)}">${rel(e.created_at)}</time></li>`).join("")
-          : `<li class="empty">${esc(U.noActivity)}</li>`;
-      });
-    }
-    if (cal && cal.contributions) {
-      const days = cal.contributions;
-      set("#ghTotal", (el) => { el.textContent = cal.total?.lastYear ?? days.reduce((a, d) => a + d.count, 0); });
-      const s = streaks(days);
-      set("#ghStreak", (el) => { el.textContent = `${s.cur}/${s.best}`; });
-      set("#ghStreakLabel", (el) => { el.textContent = "streak / best"; });
-
-      const pad = new Date(days[0].date + "T00:00:00").getDay(); // vasárnap = 0, mint a GitHubon
-      const cells = Array(pad).fill('<i style="visibility:hidden"></i>');
-      days.forEach((d, i) => {
-        const delay = reduced ? 0 : Math.min(900, Math.floor((i + pad) / 7) * 14);
-        cells.push(`<i data-l="${d.level}" style="animation-delay:${delay}ms" title="${esc(d.date)} · ${d.count}"></i>`);
-      });
-      set("#ghCal", (el) => { el.innerHTML = cells.join(""); });
-      const mf = new Intl.DateTimeFormat("en", { month: "short" });
-      const months = [];
-      for (let i = 0; i < days.length; i += 61) months.push(mf.format(new Date(days[i].date + "T00:00:00")));
-      set("#ghMonths", (el) => { el.innerHTML = months.map((m) => `<span>${esc(m)}</span>`).join(""); });
-    }
   }
 
-  async function loadGitHub() {
+  // tooltip a naptár celláin
+  const tip = $("#actTip");
+  set("#actCal", (grid) => {
+    grid.addEventListener("pointerover", (e) => {
+      const c = e.target.closest("i[data-i]");
+      if (!c || !ACT || !tip) return;
+      const d = ACT.days[+c.dataset.i];
+      tip.innerHTML = `${dayFmt.format(new Date(d.date + "T00:00:00"))} · <b>${d.code} contribution${d.code === 1 ? "" : "s"}</b> · <em>${d.prompts} Claude prompt${d.prompts === 1 ? "" : "s"}</em>`;
+      tip.hidden = false;
+    });
+    grid.addEventListener("pointermove", (e) => {
+      if (!tip || tip.hidden) return;
+      const w = tip.offsetWidth;
+      tip.style.left = Math.max(8, Math.min(innerWidth - w - 8, e.clientX - w / 2)) + "px";
+      tip.style.top = e.clientY - 46 + "px";
+    });
+    grid.addEventListener("pointerleave", () => { if (tip) tip.hidden = true; });
+  });
+
+  set("#actTabs", (tabs) => tabs.addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-mode]");
+    if (!b) return;
+    mode = b.dataset.mode;
+    $$("button", tabs).forEach((x) => { x.classList.toggle("is-on", x === b); x.setAttribute("aria-selected", x === b); });
+    renderActivity();
+  }));
+
+  function renderRepos(repos) {
+    const own = repos.filter((r) => !r.fork);
+    const langs = {};
+    own.forEach((r) => { if (r.language) langs[r.language] = (langs[r.language] || 0) + (r.size || 1); });
+    const total = Object.values(langs).reduce((a, b) => a + b, 0);
+    const top = Object.entries(langs).sort((a, b) => b[1] - a[1]).slice(0, 6);
+    set("#ghLangBar", (el) => { el.innerHTML = top.map(([, v], i) => `<span style="width:${(v / total) * 100}%;background:${palette[i]}"></span>`).join(""); });
+    set("#ghLangList", (el) => {
+      el.innerHTML = top.length
+        ? top.map(([k, v], i) => `<li><span><i style="background:${palette[i]}"></i>${esc(k)}</span><span>${((v / total) * 100).toFixed(1)}%</span></li>`).join("")
+        : `<li class="empty">${esc(U.noRepos)}</li>`;
+    });
+    // csak a legújabb nyilvános projektek: létrehozás szerint, a profil-README repó nélkül
+    const list = own
+      .filter((r) => r.name.toLowerCase() !== D.github.toLowerCase())
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+      .slice(0, 6);
+    set("#ghRepoList", (el) => {
+      el.innerHTML = list.length ? list.map((r) => `
+        <a class="card repo" href="${esc(r.html_url)}" target="_blank" rel="noopener">
+          <span class="repo__name">${esc(r.name)}</span>
+          <span class="repo__desc">${esc(r.description || "—")}</span>
+          <span class="repo__meta"><span>${esc(r.language || "")}</span><span>★ ${r.stargazers_count}</span><span>${rel(r.created_at)}</span></span>
+        </a>`).join("") : `<div class="card repo"><span class="empty">${esc(U.noRepos)}</span></div>`;
+    });
+  }
+
+  async function loadClaude() {
+    // a data/claude.json a scripts/claude_stats.py kimenete (csak névtelen napi számok)
+    const r = await fetch(`data/claude.json?t=${Math.floor(Date.now() / 600000)}`);
+    if (!r.ok) throw new Error(r.status);
+    return r.json();
+  }
+
+  async function loadActivity() {
     const u = D.github;
-    const [user, repos, events, cal] = await Promise.allSettled([GH.user(u), GH.repos(u), GH.events(u), GH.calendar(u)]);
-    renderGitHub({ user: user.value, repos: repos.value, events: events.value, cal: cal.value });
-    if (events.status === "rejected") set("#ghFeed", (el) => { el.innerHTML = `<li class="empty">${esc(U.ghError)}</li>`; });
+    const [user, repos, events, cal, claude] = await Promise.allSettled([GH.user(u), GH.repos(u), GH.events(u), GH.calendar(u), loadClaude()]);
+    if (repos.value) renderRepos(repos.value);
+    set("#ghFeed", (el) => {
+      const ev = (events.value || []).slice(0, 7);
+      el.innerHTML = events.status === "rejected"
+        ? `<li class="empty">${esc(U.ghError)}</li>`
+        : ev.length ? ev.map((e) => `<li><span>${describe(e)}</span><time datetime="${esc(e.created_at)}">${rel(e.created_at)}</time></li>`).join("")
+        : `<li class="empty">${esc(U.noActivity)}</li>`;
+    });
+    ACT = { days: buildDays(cal.value, claude.value), claude: claude.value, user: user.value, repos: repos.value };
+    renderActivity();
   }
 
   /* ---------- indulás ---------- */
@@ -321,7 +418,7 @@
   setActive();
   // a GitHub-adat csak akkor töltődik, amikor a lap közel ér hozzá (kíméli a lekérési limitet)
   const ghIO = new IntersectionObserver((ents) => {
-    if (ents.some((e) => e.isIntersecting)) { ghIO.disconnect(); loadGitHub(); }
+    if (ents.some((e) => e.isIntersecting)) { ghIO.disconnect(); loadActivity(); }
   }, { rootMargin: "800px" });
   ghIO.observe($("#work"));
 })();

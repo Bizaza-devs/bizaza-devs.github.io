@@ -7,7 +7,8 @@ Night Shift: deep black, electric gradients, bold type. **0 images, 0 frameworks
 ## Features
 - Generative CSS background: drifting aurora, a dot grid that lights up around the cursor, film grain
 - All content in one file: [`assets/js/data.js`](assets/js/data.js)
-- Live GitHub data: contribution calendar, streaks, languages, recent activity, repositories
+- **Work activity**: one calendar for GitHub contributions and Claude Code usage (All / Code / Claude), streaks, weekday chart, languages, recent activity
+- Claude data: `python scripts/claude_stats.py` aggregates local Claude Code session logs into `data/claude.json` — **only anonymous daily counts** (date, prompts, sessions, tokens), merged with earlier runs so history survives log cleanup
 - Downloadable one-page CV (PDF), generated from the same data: `scripts/build-cv.ps1`
 - Hidden command palette (`Ctrl K` / `⌘K` / `/`), scroll progress, live local clock
 - Responsive down to 320 px, respects `prefers-reduced-motion`

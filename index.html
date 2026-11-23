@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <!-- ?v= : új kiadásnál emeld, különben a böngésző a régi fájlt használhatja -->
-  <link rel="stylesheet" href="assets/css/style.css?v=4">
+  <link rel="stylesheet" href="assets/css/style.css?v=5">
   <!-- a beúszó animáció csak akkor rejt el bármit, ha a JS fut; hiba esetén minden látszik -->
   <script>document.documentElement.classList.add("js"); addEventListener("error", function (e) { if (e.filename && e.filename.indexOf("/assets/js/") > -1) document.documentElement.className = ""; });</script>
 </head>
@@ -93,29 +93,34 @@
       <div class="stack" id="stackGrid"></div>
     </section>
 
-    <!-- GITHUB -->
-    <section class="section" id="github">
+    <!-- WORK ACTIVITY: GitHub + Claude egy naptárban -->
+    <section class="section" id="activity">
       <header class="section__head reveal">
         <span class="section__idx mono">03 /</span>
         <h2 data-ui="gh"></h2>
         <p><span data-ui="ghSub"></span> <a class="mono link" id="ghProfile" target="_blank" rel="noopener"></a></p>
       </header>
 
-      <div class="gh">
-        <div class="card gh-cal reveal">
-          <div class="gh-cal__head">
-            <div><strong class="big" id="ghTotal">—</strong> <span class="muted" data-ui="contributions"></span></div>
-            <div class="gh-cal__legend mono"><span data-ui="less"></span><i data-l="0"></i><i data-l="1"></i><i data-l="2"></i><i data-l="3"></i><i data-l="4"></i><span data-ui="more"></span></div>
+      <div class="act">
+        <div class="card act-cal reveal">
+          <div class="act-cal__head">
+            <div class="seg mono" id="actTabs" role="tablist" aria-label="Activity source">
+              <button type="button" role="tab" data-mode="all" class="is-on">All</button>
+              <button type="button" role="tab" data-mode="code">Code</button>
+              <button type="button" role="tab" data-mode="claude">Claude</button>
+            </div>
+            <div class="act-cal__sum"><strong class="big" id="actTotal">—</strong> <span class="muted" id="actTotalLabel"></span></div>
           </div>
-          <div class="gh-cal__scroll"><div class="gh-cal__grid" id="ghCal" role="img" aria-label="Contribution calendar"></div></div>
-          <div class="gh-cal__months mono" id="ghMonths"></div>
+          <div class="gh-cal__scroll"><div class="act-grid" id="actCal" role="img" aria-label="Activity calendar"></div></div>
+          <div class="gh-cal__months mono" id="actMonths"></div>
+          <div class="act-legend mono" id="actLegend"></div>
         </div>
 
-        <div class="gh-kpis">
-          <div class="card kpi reveal" style="--accent: var(--lime)"><span class="kpi__v" id="ghRepos">—</span><span class="kpi__k mono" data-ui="repos"></span></div>
-          <div class="card kpi reveal" style="--accent: var(--coral)"><span class="kpi__v" id="ghStars">—</span><span class="kpi__k mono" data-ui="stars"></span></div>
-          <div class="card kpi reveal" style="--accent: var(--violet)"><span class="kpi__v" id="ghFollowers">—</span><span class="kpi__k mono" data-ui="followers"></span></div>
-          <div class="card kpi reveal" style="--accent: var(--blue)"><span class="kpi__v" id="ghStreak">—</span><span class="kpi__k mono" id="ghStreakLabel">streak</span></div>
+        <div class="act-kpis" id="actKpis"></div>
+
+        <div class="card act-week reveal">
+          <h3 class="mono small">Active days by weekday</h3>
+          <div class="week" id="actWeek"></div>
         </div>
 
         <div class="card gh-lang reveal">
@@ -129,6 +134,7 @@
           <ul id="ghFeed" class="feed mono"></ul>
         </div>
       </div>
+      <div class="tip mono" id="actTip" hidden></div>
     </section>
 
     <!-- CONTACT -->
@@ -156,8 +162,8 @@
 
   <noscript><p class="noscript">This portfolio renders from data with JavaScript. Please enable it.</p></noscript>
 
-  <script src="assets/js/data.js?v=4"></script>
-  <script src="assets/js/github.js?v=4"></script>
-  <script src="assets/js/main.js?v=4"></script>
+  <script src="assets/js/data.js?v=5"></script>
+  <script src="assets/js/github.js?v=5"></script>
+  <script src="assets/js/main.js?v=5"></script>
 </body>
 </html>
