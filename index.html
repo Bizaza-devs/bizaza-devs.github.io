@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en" data-lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Zalan Birtalan — Portfolio</title>
+  <meta name="description" content="Student developer and founder of ALAN BIRTH. Projects, knowledge, education path and live GitHub activity.">
+  <meta name="theme-color" content="#050505">
+  <meta property="og:title" content="Zalan Birtalan — Portfolio">
+  <meta property="og:description" content="Student developer · founder of ALAN BIRTH · next stop: KTH, Stockholm.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23000'/%3E%3Ctext x='16' y='21' font-family='monospace' font-size='13' font-weight='700' fill='%23fff' text-anchor='middle'%3EZB%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <!-- Háttér: csak CSS, nincs kép -->
+  <div class="bg" aria-hidden="true">
+    <div class="bg__blob bg__blob--a"></div>
+    <div class="bg__blob bg__blob--b"></div>
+    <div class="bg__blob bg__blob--c"></div>
+    <div class="bg__grid"></div>
+    <div class="bg__vignette"></div>
+  </div>
+
+  <!-- Liquid glass torzítás (Chromiumban a backdrop-filteren) -->
+  <svg class="sr-only" aria-hidden="true">
+    <filter id="liquid" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.004 0.007" numOctaves="1" seed="7" result="n"/>
+      <feGaussianBlur in="n" stdDeviation="6" result="nb"/>
+      <feDisplacementMap in="SourceGraphic" in2="nb" scale="22" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
+
+  <div class="progress" aria-hidden="true"><span></span></div>
+
+  <header class="nav-wrap">
+    <nav class="nav glass glass--liquid" aria-label="Main">
+      <a class="nav__mark" href="#index" aria-label="Home">ZB</a>
+      <ul class="nav__links" id="navLinks"></ul>
+      <div class="nav__tools">
+        <button class="chip" id="cmdBtn" type="button" aria-label="Command palette"><kbd>⌘K</kbd></button>
+        <button class="chip" id="langBtn" type="button" aria-label="Switch language">HU</button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="index">
+      <div class="hero__card glass glass--lg glass--liquid reveal">
+        <div class="hero__meta mono">
+          <span class="dot dot--live"></span>
+          <span id="heroLocation"></span>
+          <span class="sep">/</span>
+          <span><span data-ui="local"></span> <span id="clock">--:--:--</span></span>
+        </div>
+        <h1 class="hero__name" id="heroName"></h1>
+        <p class="hero__role mono" id="heroRole"></p>
+        <p class="hero__tagline" id="heroTagline"></p>
+        <div class="hero__status mono" id="heroStatus"></div>
+      </div>
+      <div class="stats" id="stats"></div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section class="section" id="work">
+      <header class="section__head reveal">
+        <span class="section__idx mono">01</span>
+        <h2 data-ui="work"></h2>
+        <p data-ui="workSub"></p>
+      </header>
+      <div class="projects" id="projects"></div>
+    </section>
+
+    <!-- STACK -->
+    <section class="section" id="stack">
+      <header class="section__head reveal">
+        <span class="section__idx mono">02</span>
+        <h2 data-ui="stack"></h2>
+        <p data-ui="stackSub"></p>
+      </header>
+      <div class="legend mono reveal" id="legend"></div>
+      <div class="stack" id="stackGrid"></div>
+    </section>
+
+    <!-- PATH -->
+    <section class="section" id="path">
+      <header class="section__head reveal">
+        <span class="section__idx mono">03</span>
+        <h2 data-ui="path"></h2>
+        <p data-ui="pathSub"></p>
+      </header>
+      <ol class="timeline glass reveal" id="timeline"></ol>
+    </section>
+
+    <!-- GITHUB -->
+    <section class="section" id="github">
+      <header class="section__head reveal">
+        <span class="section__idx mono">04</span>
+        <h2 data-ui="gh"></h2>
+        <p><span data-ui="ghSub"></span> <a class="mono link" id="ghProfile" target="_blank" rel="noopener"></a></p>
+      </header>
+
+      <div class="gh-grid">
+        <div class="glass gh-cal reveal">
+          <div class="gh-cal__head">
+            <div><strong class="big mono" id="ghTotal">—</strong> <span class="muted" data-ui="contributions"></span></div>
+            <div class="gh-cal__legend mono"><span data-ui="less"></span><i data-l="0"></i><i data-l="1"></i><i data-l="2"></i><i data-l="3"></i><i data-l="4"></i><span data-ui="more"></span></div>
+          </div>
+          <div class="gh-cal__scroll"><div class="gh-cal__grid" id="ghCal" role="img" aria-label="Contribution calendar"></div></div>
+          <div class="gh-cal__months mono" id="ghMonths"></div>
+        </div>
+
+        <div class="gh-side">
+          <div class="gh-kpis">
+            <div class="glass kpi reveal"><span class="kpi__v mono" id="ghRepos">—</span><span class="kpi__k" data-ui="repos"></span></div>
+            <div class="glass kpi reveal"><span class="kpi__v mono" id="ghStars">—</span><span class="kpi__k" data-ui="stars"></span></div>
+            <div class="glass kpi reveal"><span class="kpi__v mono" id="ghFollowers">—</span><span class="kpi__k" data-ui="followers"></span></div>
+            <div class="glass kpi reveal"><span class="kpi__v mono" id="ghStreak">—</span><span class="kpi__k" id="ghStreakLabel">streak</span></div>
+          </div>
+          <div class="glass gh-lang reveal">
+            <h3 class="mono small" data-ui="languages"></h3>
+            <div class="lang-bar" id="ghLangBar"></div>
+            <ul class="lang-list mono" id="ghLangList"></ul>
+          </div>
+        </div>
+
+        <div class="glass gh-feed reveal">
+          <h3 class="mono small" data-ui="recent"></h3>
+          <ul id="ghFeed" class="feed mono"></ul>
+        </div>
+
+        <div class="gh-repos" id="ghRepoList"></div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section" id="contact">
+      <div class="contact glass glass--lg glass--liquid reveal">
+        <span class="section__idx mono">05</span>
+        <h2 data-ui="contact"></h2>
+        <p data-ui="contactSub"></p>
+        <div class="contact__links" id="contactLinks"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer mono">
+    <span data-ui="built"></span>
+    <span><span data-ui="updated"></span> <span id="updated"></span></span>
+  </footer>
+
+  <!-- Command palette -->
+  <div class="palette" id="palette" hidden>
+    <div class="palette__box glass glass--lg" role="dialog" aria-modal="true" aria-label="Command palette">
+      <input class="palette__input mono" id="paletteInput" type="text" autocomplete="off" spellcheck="false">
+      <ul class="palette__list mono" id="paletteList" role="listbox"></ul>
+    </div>
+  </div>
+
+  <noscript><p class="noscript">This portfolio renders from data with JavaScript. Please enable it.</p></noscript>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/github.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
