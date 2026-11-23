@@ -312,7 +312,11 @@
   /* ---------- indulás ---------- */
   render();
   tick(); setInterval(tick, 1000);
+  // a hero azonnal beúszik, nem vár a görgetésfigyelőre
+  setTimeout(() => $$(".hero .reveal").forEach((el, i) => setTimeout(() => el.classList.add("is-in"), i * 90)), 60);
   observe();
+  // biztonsági háló: ami 2,5 mp múlva is látótérben van, az mindenképp megjelenik
+  setTimeout(() => $$(".reveal:not(.is-in)").forEach((el) => { if (el.getBoundingClientRect().top < innerHeight) el.classList.add("is-in"); }), 2500);
   countUp();
   setActive();
   // a GitHub-adat csak akkor töltődik, amikor a lap közel ér hozzá (kíméli a lekérési limitet)

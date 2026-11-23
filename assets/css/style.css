@@ -304,8 +304,8 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
 .palette__list li.is-sel span:last-child { color: rgba(0,0,0,.6); }
 
 /* ---------- Megjelenés görgetéskor ---------- */
-.reveal { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
-.reveal.is-in { opacity: 1; transform: none; }
+.js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
+.js .reveal.is-in { opacity: 1; transform: none; }
 .noscript { padding: 120px 24px; text-align: center; }
 
 /* ---------- Reszponzív ---------- */
@@ -334,7 +334,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .reveal { opacity: 1; transform: none; }
+  .js .reveal { opacity: 1; transform: none; }
   .gh-cal__grid i { transform: none; }
   html { scroll-behavior: auto; }
 }

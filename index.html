@@ -14,7 +14,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <!-- ?v= : új kiadásnál emeld, különben a böngésző a régi fájlt használhatja -->
-  <link rel="stylesheet" href="assets/css/style.css?v=3">
+  <link rel="stylesheet" href="assets/css/style.css?v=4">
+  <!-- a beúszó animáció csak akkor rejt el bármit, ha a JS fut; hiba esetén minden látszik -->
+  <script>document.documentElement.classList.add("js"); addEventListener("error", function (e) { if (e.filename && e.filename.indexOf("/assets/js/") > -1) document.documentElement.className = ""; });</script>
 </head>
 <body>
   <!-- Háttér: csak CSS, nincs kép -->
@@ -154,8 +156,8 @@
 
   <noscript><p class="noscript">This portfolio renders from data with JavaScript. Please enable it.</p></noscript>
 
-  <script src="assets/js/data.js?v=3"></script>
-  <script src="assets/js/github.js?v=3"></script>
-  <script src="assets/js/main.js?v=3"></script>
+  <script src="assets/js/data.js?v=4"></script>
+  <script src="assets/js/github.js?v=4"></script>
+  <script src="assets/js/main.js?v=4"></script>
 </body>
 </html>
