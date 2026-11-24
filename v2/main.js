@@ -1,7 +1,7 @@
 /* ============================================================
-   Portfolio v2 — renderelés a ../assets/js/data.js-ből + mozgás
-   A tartalom GSAP nélkül is teljes; a GSAP csak ráadás.
-   A Work activity szekciót a v2/activity.js tölti (#activityV2).
+   Portfolio v2 — rendering from assets/js/data.js + motion
+   Content is complete without GSAP; GSAP is only an extra.
+   The Work activity section is filled by v2/activity.js (#activityV2).
    ============================================================ */
 (() => {
   const D = window.PORTFOLIO;
@@ -9,7 +9,7 @@
   if (!D || !U) return;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const set = (sel, fn) => { const el = $(sel); if (el) fn(el); }; // hiányzó elem ne állítsa le az oldalt
+  const set = (sel, fn) => { const el = $(sel); if (el) fn(el); }; // a missing element must not break the page
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = matchMedia("(pointer: fine)").matches;
@@ -18,10 +18,10 @@
   const ACCENTS = ["mint", "sky", "indigo", "rose", "amber"];
   const acc = (name, fallback = "amber") => `var(--${ACCENTS.includes(name) ? name : fallback})`;
   const school = D.education.find((e) => !e.to) || D.education[0];
-  const CV = "../" + D.cvPdf; // a v2 egy mappával lejjebb van
+  const CV = D.cvPdf;
   const pad2 = (n) => String(n).padStart(2, "0");
 
-  /* ---------- renderelés ---------- */
+  /* ---------- rendering ---------- */
   function render() {
     $$("[data-ui]").forEach((el) => { if (U[el.dataset.ui] != null) el.textContent = U[el.dataset.ui]; });
     $$(".cv-link").forEach((a) => { a.href = CV; });
@@ -37,7 +37,7 @@
       ].join("");
     });
 
-    // hero — betűnként, hogy mozoghasson
+    // hero — letter by letter, so it can move
     const [first, ...rest] = D.person.name.split(" ");
     let n = 0;
     const letters = (w) => [...w].map((c) => `<span class="ch" style="--i:${n++}">${esc(c)}</span>`).join("");
@@ -65,14 +65,14 @@
       el.innerHTML = D.person.status.map((s, i, a) => `<div>${esc(s)}${i === a.length - 1 ? '<span class="caret"></span>' : ""}</div>`).join("");
     });
 
-    // futó szalag
+    // marquee
     set("#marquee", (el) => {
       const words = ["ALAN BIRTH", ...D.stack.flatMap((g) => g.items.map((i) => i.name)).filter((x) => !/—/.test(x)), "Collection 01 — FW26", "Budapest"];
       const run = words.map((w) => `<span>${esc(w)}</span><span class="star">✲</span>`).join("");
-      el.innerHTML = run + run; // kétszer, hogy végtelenül fusson
+      el.innerHTML = run + run; // twice, so it loops seamlessly
     });
 
-    // számok — kilométeróra
+    // stats — odometer
     set("#stats", (el) => {
       el.innerHTML = D.stats.map((s, i) => {
         const v = s.value === "age" ? D.age : s.value;
@@ -84,7 +84,7 @@
       }).join("");
     });
 
-    // projektek
+    // projects
     set("#projects", (el) => {
       el.innerHTML = D.projects.map((p, i) => {
         const links = [...(p.links || [])];
@@ -114,7 +114,7 @@
       el.innerHTML = [0, 1, 2].map(() => `<li class="repo repo--skel" aria-hidden="true"><span class="repo__name"></span></li>`).join("");
     });
 
-    // rólam + idővonal — a bevezető szavanként (görgetésre "kigyullad")
+    // about + timeline — the lead word by word ("lights up" on scroll)
     set("#aboutLead", (el) => {
       const text = (D.person.about || D.person.tagline).replace("{age}", D.age);
       el.setAttribute("aria-label", text);
@@ -134,7 +134,7 @@
         </li>`).join(""));
     });
 
-    // tudás
+    // skills
     set("#legend", (el) => { el.innerHTML = ["using", "learning"].map((l) => `<span><i class="lv lv--${l}"></i>${esc(U.levels[l])}</span>`).join(""); });
     set("#stackGrid", (el) => {
       el.innerHTML = D.stack.map((g, gi) => `
@@ -144,7 +144,7 @@
         </div>`).join("");
     });
 
-    // kapcsolat
+    // contact
     const c = D.contact;
     set("#contactMail", (el) => {
       if (c.email) { el.href = `mailto:${c.email}`; el.textContent = c.email; }
@@ -161,7 +161,7 @@
     set("#updated", (el) => { el.textContent = D.updated; });
   }
 
-  // kilométeróra: minden számjegy egy 0–9 0–9 szalag, ami a helyére gördül
+  // odometer: each digit is a 0–9 0–9 strip that rolls into place
   function odometer(v) {
     const s = String(v);
     const strip = Array.from({ length: 20 }, (_, i) => `<span>${i % 10}</span>`).join("");
@@ -170,7 +170,7 @@
       : `<span aria-hidden="true">${esc(ch)}</span>`).join("")}</span>`;
   }
 
-  // gördülés után sima szövegre cseréli (a számjegyek ne álljanak szét)
+  // after rolling, swap to plain text (so the digits don't spread apart)
   function settleOdo(el) {
     const plain = () => { el.textContent = el.getAttribute("aria-label"); el.role = null; el.classList.add("is-done"); };
     if (reduced) { plain(); return; }
@@ -178,7 +178,7 @@
     setTimeout(plain, 1900 + $$(".odo__s", el).length * 110 + 80);
   }
 
-  /* ---------- óra ---------- */
+  /* ---------- clock ---------- */
   const fmt = new Intl.DateTimeFormat("en-GB", { timeZone: D.timezone, hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
   const fmtShort = new Intl.DateTimeFormat("en-GB", { timeZone: D.timezone, hour: "2-digit", minute: "2-digit", hour12: false });
   function tick() {
@@ -187,7 +187,7 @@
     $$(".js-clock").forEach((el) => { el.textContent = `${D.person.location.split(",")[0]} ${fmtShort.format(now)}`; });
   }
 
-  /* ---------- "I build …" forgó szó ---------- */
+  /* ---------- "I build …" rotating word ---------- */
   function rotator() {
     const el = $("#heroRot"), words = D.person.builds || [];
     if (!el || words.length < 2) return;
@@ -201,14 +201,14 @@
     }, 2600);
   }
 
-  /* ---------- téma (localStorage "theme", különben a rendszert követi) ---------- */
+  /* ---------- theme (localStorage "theme", otherwise follows the system) ---------- */
   const metaTheme = $('meta[name="theme-color"]');
   const sysLight = matchMedia("(prefers-color-scheme: light)");
   function applyTheme(t, save, announce) {
     root.setAttribute("data-theme", t);
     if (metaTheme) metaTheme.content = t === "light" ? "#f2ede5" : "#0b0c10";
     $$(".theme-btn").forEach((b) => b.setAttribute("aria-pressed", String(t === "light")));
-    if (save) { try { localStorage.setItem("theme", t); } catch (e) { /* privát mód */ } }
+    if (save) { try { localStorage.setItem("theme", t); } catch (e) { /* private mode */ } }
     if (announce) document.dispatchEvent(new CustomEvent("themechange", { detail: { theme: t } }));
   }
   const toggleTheme = () => applyTheme(root.getAttribute("data-theme") === "light" ? "dark" : "light", true, true);
@@ -223,7 +223,7 @@
     $$("svg", b).forEach((s) => { s.style.animation = "none"; void s.getBoundingClientRect(); s.style.animation = ""; });
   }));
 
-  /* ---------- telefonos menü ---------- */
+  /* ---------- mobile menu ---------- */
   const sheet = $("#sheet"), menuBtn = $("#menuBtn");
   function setMenu(open) {
     if (!sheet || !menuBtn) return;
@@ -241,7 +241,7 @@
     addEventListener("resize", () => { if (innerWidth > 820 && sheet.classList.contains("is-open")) setMenu(false); });
   }
 
-  /* ---------- toast + e-mail másolás ---------- */
+  /* ---------- toast + copy email ---------- */
   const toastEl = $("#toast");
   let toastT = 0;
   function toast(msg) {
@@ -255,7 +255,7 @@
   }
   set("#copyMail", (b) => b.addEventListener("click", copyEmail));
 
-  /* ---------- megjelenés görgetéskor (GSAP nélkül is) ---------- */
+  /* ---------- reveal on scroll (works without GSAP) ---------- */
   function observe() {
     const io = new IntersectionObserver((ents) => ents.forEach((e) => {
       if (!e.isIntersecting) return;
@@ -268,7 +268,7 @@
     $$(".reveal:not(.is-in), .note, .contact__swash, [data-odo]").forEach((el) => io.observe(el));
   }
 
-  /* ---------- kurzor + mágneses gombok + "lélegző" név (csak egérrel) ---------- */
+  /* ---------- cursor + magnetic buttons + "breathing" name (mouse only) ---------- */
   function pointerFx() {
     if (reduced || !finePointer) return;
     root.classList.add("has-cursor");
@@ -294,7 +294,7 @@
     document.addEventListener("pointerleave", () => cur.classList.add("is-hidden"));
     document.addEventListener("pointerenter", () => cur.classList.remove("is-hidden"));
 
-    // mágneses elemek: finoman a kurzor felé húzódnak
+    // magnetic elements: gently pulled toward the cursor
     document.addEventListener("pointermove", (e) => {
       const m = e.target.closest?.(".magnetic");
       $$(".magnetic.is-pull").forEach((el) => { if (el !== m) { el.classList.remove("is-pull"); el.style.transform = ""; } });
@@ -305,7 +305,7 @@
       m.style.transform = `translate(${dx * 0.25}px, ${dy * 0.35}px)`;
     }, { passive: true });
 
-    // név: a kurzorhoz közeli betűk elvékonyodnak és összeszűkülnek
+    // name: letters near the cursor get thinner and narrower
     const hero = $(".hero"), chars = $$(".hero__name .ch");
     let hraf = 0, hx = 0, hy = 0;
     const breathe = () => {
@@ -322,7 +322,7 @@
     hero?.addEventListener("pointermove", (e) => { hx = e.clientX; hy = e.clientY; if (!hraf) hraf = requestAnimationFrame(breathe); }, { passive: true });
     hero?.addEventListener("pointerleave", () => chars.forEach((ch) => { ch.style.setProperty("--w", 800); ch.style.setProperty("--wd", 100); ch.classList.remove("is-hot"); }));
 
-    // címke: enyhe 3D-billenés
+    // label: subtle 3D tilt
     set("#label", (lb) => {
       lb.addEventListener("pointermove", (e) => {
         const r = lb.getBoundingClientRect();
@@ -333,7 +333,7 @@
     });
   }
 
-  /* ---------- görgetés: gyűrű, aktív menüpont, fejléc, szalag-sebesség ---------- */
+  /* ---------- scroll: ring, active nav item, header, marquee speed ---------- */
   const toTop = $(".to-top"), ring = $(".to-top__ring"), top = $(".top");
   const RING = 2 * Math.PI * 21;
   function setActive() {
@@ -348,7 +348,7 @@
   }
   let lastY = scrollY, vel = 0, mAnim = null, mraf = 0;
   function marqueeSpeed() {
-    // a szalag a görgetés irányába és sebességével fut, aztán visszaáll
+    // the marquee follows scroll direction and speed, then settles back
     if (reduced) return;
     if (!mAnim) mAnim = $("#marquee")?.getAnimations?.()[0];
     if (!mAnim) return;
@@ -370,7 +370,7 @@
   }
   addEventListener("scroll", onScroll, { passive: true });
 
-  /* ---------- parancspaletta: Ctrl K / ⌘K / "/" ---------- */
+  /* ---------- command palette: Ctrl K / ⌘K / "/" ---------- */
   const pal = $("#palette"), pin = $("#paletteInput"), plist = $("#paletteList");
   let sel = 0, items = [], lastFocus = null;
   const commands = () => [
@@ -410,7 +410,7 @@
     else if (e.key === "Enter") { e.preventDefault(); runSel(); }
   });
 
-  /* ---------- legújabb nyilvános repók (GitHub) ---------- */
+  /* ---------- latest public repos (GitHub) ---------- */
   function rel(date) {
     const s = (Date.now() - new Date(date)) / 1000;
     const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto", style: "short" });
@@ -420,7 +420,7 @@
     return rtf.format(0, "second");
   }
   function renderRepos(repos) {
-    // csak a legújabb nyilvános projektek: létrehozás szerint, a profil-README repó nélkül
+    // newest public projects only: by creation date, without the profile-README repo
     const list = (repos || [])
       .filter((r) => !r.fork && r.name.toLowerCase() !== D.github.toLowerCase())
       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
@@ -439,7 +439,7 @@
     catch (e) { set("#ghRepoList", (el) => { el.innerHTML = `<li class="repo repo--empty">${esc(U.ghError)}</li>`; }); }
   }
 
-  /* ---------- GSAP-ráadás (ha betöltött és szabad mozogni) ---------- */
+  /* ---------- GSAP extras (if loaded and motion is allowed) ---------- */
   function gsapFx() {
     const g = window.gsap, ST = window.ScrollTrigger;
     if (reduced || !g || !ST) return;
@@ -447,7 +447,7 @@
     root.classList.add("gsap");
     const mm = g.matchMedia();
 
-    // a bevezető szövege szavanként gyullad ki görgetésre
+    // the lead text lights up word by word on scroll
     const words = $$("#aboutLead .w");
     if (words.length) {
       g.fromTo(words, { opacity: 0.16 }, {
@@ -456,22 +456,22 @@
       });
     }
 
-    // név: a két sor szétcsúszik görgetéskor
+    // name: the two lines slide apart on scroll
     g.to(".hero__name .ln--1", { xPercent: -8, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
     g.to(".hero__name .ln--2", { xPercent: 6, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: true } });
 
-    // idővonal: a sín kirajzolódik
+    // timeline: the rail draws in
     g.fromTo(".timeline__rail span", { scaleY: 0 }, { scaleY: 1, ease: "none", scrollTrigger: { trigger: "#timeline", start: "top 75%", end: "bottom 60%", scrub: 0.5 } });
 
-    // nagy címek: enyhe „rugós” beúszás
+    // big headings: soft "springy" entrance
     $$(".shead__title").forEach((h) => {
       g.fromTo(h, { yPercent: 30, skewY: 4 }, { yPercent: 0, skewY: 0, ease: "power3.out", scrollTrigger: { trigger: h, start: "top 92%", end: "top 55%", scrub: 0.8 } });
     });
 
-    // kapcsolat-cím: felnagyul ahogy beér
+    // contact title: scales up as it enters
     g.fromTo("#contactTitle", { scale: 0.86, transformOrigin: "0% 100%" }, { scale: 1, ease: "none", scrollTrigger: { trigger: "#contactTitle", start: "top 100%", end: "top 45%", scrub: 0.6 } });
 
-    // egymásra csúszó projektkártyák: a hátsó kicsit hátrébb lép
+    // stacking project cards: the one behind steps back a little
     mm.add("(min-width: 900px) and (min-height: 720px)", () => {
       const cards = $$(".project");
       cards.forEach((card, i) => {
@@ -483,23 +483,23 @@
         });
       });
     });
-    // a webbetűk / GitHub-adat után újramérés
+    // re-measure after web fonts / GitHub data
     document.fonts?.ready.then(() => ST.refresh());
   }
 
-  /* ---------- indulás ---------- */
+  /* ---------- start ---------- */
   render();
   tick(); setInterval(tick, 1000);
   rotator();
-  // a hero azonnal beúszik
+  // the hero reveals immediately
   setTimeout(() => $$(".hero .reveal").forEach((el, i) => setTimeout(() => el.classList.add("is-in"), 250 + i * 110)), 60);
   observe();
-  // biztonsági háló: ami 2,5 mp múlva is látótérben van, az mindenképp megjelenik
+  // safety net: anything still in view after 2.5 s is shown regardless
   setTimeout(() => $$(".reveal:not(.is-in)").forEach((el) => { if (el.getBoundingClientRect().top < innerHeight) el.classList.add("is-in"); }), 2500);
   pointerFx();
   onScroll();
   gsapFx();
-  // a GitHub-adat csak akkor töltődik, amikor a lap közel ér hozzá (kíméli a lekérési limitet)
+  // GitHub data loads only when the page gets near it (spares the rate limit)
   const ghIO = new IntersectionObserver((ents) => {
     if (ents.some((e) => e.isIntersecting)) { ghIO.disconnect(); loadRepos().then(() => window.ScrollTrigger?.refresh()); }
   }, { rootMargin: "800px" });

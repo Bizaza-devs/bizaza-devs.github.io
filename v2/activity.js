@@ -173,7 +173,7 @@
     const uid = `av2-${++uidSeq}`;
     const S = { mode: "all", range: "1y", days: null, repos: null, events: null, err: {}, area: null, totalShown: 0, cancel: {} };
     const user = opts.github || root.dataset.github || D.github;
-    const claudeSrc = opts.claudeSrc || root.dataset.claudeSrc || "../data/claude.json";
+    const claudeSrc = opts.claudeSrc || root.dataset.claudeSrc || "data/claude.json";
 
     root.classList.add("av2-root");
     root.innerHTML = `

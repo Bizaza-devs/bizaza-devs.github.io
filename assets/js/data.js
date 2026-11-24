@@ -222,7 +222,7 @@ window.UI = {
   stackSub: "No percentages — what I use daily and what I am learning right now. I work in Hungarian and English, and I'm learning Spanish.",
   levels: { using: "Using", learning: "Learning" },
   gh: "Work activity",
-  ghSub: "Shipping code on GitHub and building with Claude — one calendar.",
+  ghSub: "Shipping code on GitHub and building with Claude — every day, in numbers.",
   contributions: "contributions in the last year",
   repos: "Repositories",
   stars: "Stars",
