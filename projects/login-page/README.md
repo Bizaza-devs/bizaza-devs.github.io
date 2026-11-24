@@ -1,11 +1,18 @@
-# Login page
+# Login pages
 
-A small, accessible sign-in page in plain HTML, CSS and JavaScript. No framework, no dependencies, no build step.
+Three small, accessible auth pages in plain HTML, CSS and JavaScript. No framework, no dependencies, no build step.
+
+| Page | Style | Link |
+|---|---|---|
+| Sign in | card, gradient accent | [index.html](https://bizaza-devs.github.io/projects/login-page/) |
+| Create account | minimal | [create-account.html](https://bizaza-devs.github.io/projects/login-page/create-account.html) |
+| Reset password | minimal | [forgot-password.html](https://bizaza-devs.github.io/projects/login-page/forgot-password.html) |
 
 **Live:** https://bizaza-devs.github.io/projects/login-page/
 
 ## What it does
-- Client-side validation with inline error messages (email format, minimum password length)
+- Client-side validation with inline error messages (email format, minimum password length, matching passwords, terms)
+- Password strength hint on the create-account page; the reset page uses neutral wording so a real backend would not reveal which emails have accounts
 - Show / hide password toggle
 - Keyboard and screen-reader friendly: labels, `aria-invalid`, `role="alert"`, visible focus rings
 - Dark and light theme (follows the system), respects `prefers-reduced-motion`

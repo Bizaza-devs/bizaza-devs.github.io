@@ -48,7 +48,4 @@
     }, 900);
   });
 
-  ['forgot', 'signup'].forEach((id) => $(id).addEventListener('click', (e) => {
-    e.preventDefault(); status.className = 'status bad'; status.textContent = 'Not available in this demo.';
-  }));
 })();
