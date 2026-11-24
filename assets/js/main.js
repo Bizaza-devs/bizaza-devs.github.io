@@ -1,12 +1,12 @@
 /* ============================================================
-   Portfolio — renderelés a data.js-ből, effektek, GitHub
+   Portfolio — rendering from data.js, effects, GitHub
    ============================================================ */
 (() => {
   const D = window.PORTFOLIO;
   const U = window.UI;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-  const set = (sel, fn) => { const el = $(sel); if (el) fn(el); }; // hiányzó elem ne állítsa le az oldalt
+  const set = (sel, fn) => { const el = $(sel); if (el) fn(el); }; // a missing element must not break the page
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const finePointer = matchMedia("(pointer: fine)").matches;
@@ -16,7 +16,7 @@
   const acc = (name, fallback = "mint") => `var(--${ACCENTS.includes(name) ? name : fallback})`;
   const school = D.education.find((e) => !e.to) || D.education[0];
 
-  /* ---------- renderelés ---------- */
+  /* ---------- rendering ---------- */
   function render() {
     $$("[data-ui]").forEach((el) => { if (U[el.dataset.ui] != null) el.textContent = U[el.dataset.ui]; });
     $$(".cv-link").forEach((a) => { a.href = D.cvPdf; });
@@ -55,14 +55,14 @@
       el.innerHTML = D.person.status.map((s, i, a) => `<div>${esc(s)}${i === a.length - 1 ? '<span class="caret"></span>' : ""}</div>`).join("");
     });
 
-    // futó szalag
+    // marquee
     set("#marquee", (el) => {
       const words = ["ALAN BIRTH", ...D.stack.flatMap((g) => g.items.map((i) => i.name)).filter((n) => !/—/.test(n)), "Collection 01 — FW26", "Budapest"];
       const run = words.map((w) => `<span>${esc(w)}</span><span class="star">✦</span>`).join("");
-      el.innerHTML = run + run; // kétszer, hogy végtelenül fusson
+      el.innerHTML = run + run; // twice, so it loops seamlessly
     });
 
-    // számok
+    // stats
     set("#stats", (el) => {
       el.innerHTML = D.stats.map((s, i) => {
         const v = s.value === "age" ? D.age : s.value;
@@ -102,7 +102,7 @@
       }).join("");
     });
 
-    // rólam + idővonal
+    // about + timeline
     set("#aboutLead", (el) => { el.textContent = (D.person.about || D.person.tagline).replace("{age}", D.age); });
     set("#aboutNow", (el) => { el.innerHTML = D.person.status.map((s) => `<li>${esc(s)}</li>`).join(""); });
     set("#aboutInterests", (el) => { el.innerHTML = (D.interests || []).map((s) => `<span>${esc(s)}</span>`).join(""); });
@@ -115,7 +115,7 @@
         </li>`).join("");
     });
 
-    // tudás
+    // skills
     set("#legend", (el) => { el.innerHTML = ["using", "learning"].map((l) => `<span><i class="lv lv--${l}"></i>${esc(U.levels[l])}</span>`).join(""); });
     set("#stackGrid", (el) => {
       el.innerHTML = D.stack.map((g) => `
@@ -142,11 +142,11 @@
     set("#updated", (el) => { el.textContent = D.updated; });
   }
 
-  /* ---------- óra ---------- */
+  /* ---------- clock ---------- */
   const fmt = new Intl.DateTimeFormat("en-GB", { timeZone: D.timezone, hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
   const tick = () => set("#clock", (el) => { el.textContent = fmt.format(new Date()) + " CET"; });
 
-  /* ---------- "I build …" forgó szó ---------- */
+  /* ---------- "I build …" rotating word ---------- */
   function rotator() {
     const el = $("#heroRot"), words = D.person.builds || [];
     if (!el || words.length < 2) return;
@@ -160,23 +160,23 @@
     }, 2600);
   }
 
-  /* ---------- téma ---------- */
+  /* ---------- theme ---------- */
   const metaTheme = $('meta[name="theme-color"]');
   function applyTheme(t, save) {
     root.setAttribute("data-theme", t);
     if (metaTheme) metaTheme.content = t === "light" ? "#f4f6fb" : "#05070d";
     $$(".theme-btn").forEach((b) => b.setAttribute("aria-pressed", t === "light"));
-    if (save) { try { localStorage.setItem("theme", t); } catch (e) { /* privát mód */ } }
+    if (save) { try { localStorage.setItem("theme", t); } catch (e) { /* private mode */ } }
   }
   const toggleTheme = () => applyTheme(root.getAttribute("data-theme") === "light" ? "dark" : "light", true);
   applyTheme(root.getAttribute("data-theme") || "dark", false);
   $$(".theme-btn").forEach((b) => b.addEventListener("click", () => {
     toggleTheme();
-    // az ikon animációja újrainduljon
+    // restart the icon animation
     $$("svg", b).forEach((s) => { s.style.animation = "none"; void s.getBoundingClientRect(); s.style.animation = ""; });
   }));
 
-  /* ---------- telefonos menü ---------- */
+  /* ---------- mobile menu ---------- */
   const sheet = $("#sheet"), menuBtn = $("#menuBtn");
   function setMenu(open) {
     if (!sheet || !menuBtn) return;
@@ -194,7 +194,7 @@
     addEventListener("resize", () => { if (innerWidth > 820 && sheet.classList.contains("is-open")) setMenu(false); });
   }
 
-  /* ---------- toast + e-mail másolás ---------- */
+  /* ---------- toast + copy email ---------- */
   const toastEl = $("#toast");
   let toastT = 0;
   function toast(msg) {
@@ -208,7 +208,7 @@
   }
   set("#copyMail", (b) => b.addEventListener("click", copyEmail));
 
-  /* ---------- megjelenés görgetéskor ---------- */
+  /* ---------- reveal on scroll ---------- */
   function observe() {
     const io = new IntersectionObserver((ents) => ents.forEach((e) => {
       if (e.isIntersecting) { e.target.classList.add("is-in"); io.unobserve(e.target); }
@@ -235,7 +235,7 @@
     els.forEach((el) => io.observe(el));
   }
 
-  /* ---------- kurzor: pontháló + kártya-reflektor (csak egérrel) ---------- */
+  /* ---------- cursor: dot grid + card spotlight (mouse only) ---------- */
   if (!reduced && finePointer) {
     let raf = 0, x = 0, y = 0, card = null;
     addEventListener("pointermove", (e) => {
@@ -249,7 +249,7 @@
     }, { passive: true });
   }
 
-  /* ---------- görgetés: gyűrű + aktív menüpont ---------- */
+  /* ---------- scroll: progress ring + active nav item ---------- */
   const toTop = $(".to-top"), ring = $(".to-top__ring");
   const RING = 2 * Math.PI * 21;
   function setActive() {
@@ -311,7 +311,7 @@
   });
 
   /* ============================================================
-     Work activity — GitHub + Claude egy naptárban
+     Work activity — GitHub + Claude in one calendar
      ============================================================ */
   const langPalette = ["var(--mint)", "var(--sky)", "var(--indigo)", "var(--rose)", "var(--amber)", "var(--fg-3)"];
   const compact = new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 });
@@ -342,7 +342,7 @@
     }
   }
 
-  // az utolsó 53 hét napjai, vasárnappal kezdve (mint a GitHubon)
+  // days of the last 53 weeks, starting on Sunday (as on GitHub)
   function buildDays(ghCal, claude) {
     const gh = {}, cl = {};
     (ghCal?.contributions || []).forEach((d) => { gh[d.date] = d.count; });
@@ -357,7 +357,7 @@
     return days;
   }
 
-  // 4 szint a 95. percentilishez mérve, hogy egy kiugró nap ne nyomja el a többit
+  // 4 levels relative to the 95th percentile, so one outlier day does not flatten the rest
   function scaler(vals) {
     const nz = vals.filter((v) => v > 0).sort((a, b) => a - b);
     const top = nz.length ? nz[Math.min(nz.length - 1, Math.floor(nz.length * 0.95))] : 1;
@@ -369,14 +369,14 @@
     let cur = 0, best = 0, run = 0;
     days.forEach((d) => { run = active(d) ? run + 1 : 0; best = Math.max(best, run); });
     let i = days.length - 1;
-    if (i >= 0 && !active(days[i])) i--; // a mai nap még lehet üres
+    if (i >= 0 && !active(days[i])) i--; // today may still be empty
     while (i >= 0 && active(days[i])) { cur++; i--; }
     return { cur, best };
   }
 
   let ACT = null, mode = "all", shownWeeks = 0;
 
-  // hány hét fér ki: legalább ~10 px-es cellák, így telefonon nem kell oldalra görgetni
+  // how many weeks fit: cells of at least ~10 px, so phones need no sideways scrolling
   function weeksFor() {
     const box = $(".gh-cal__scroll");
     const total = Math.ceil(ACT.days.length / 7);
@@ -408,7 +408,7 @@
       }).join("");
     });
 
-    // hónapnevek pontosan a hét-oszlopok fölé, ütközés nélkül
+    // month labels aligned above the week columns, without overlaps
     const mf = new Intl.DateTimeFormat("en", { month: "short" });
     const labels = [];
     let lastM = -1, lastCol = -9;
@@ -455,7 +455,7 @@
       el.innerHTML = kpis.map(([k, v, c]) => `<div class="card kpi" style="--accent:var(--${c})"><span class="kpi__v">${esc(v)}</span><span class="kpi__k mono">${esc(k)}</span></div>`).join("");
     });
 
-    // aktív napok a hét napjai szerint
+    // active days by weekday
     const names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], order = [1, 2, 3, 4, 5, 6, 0];
     const per = [0, 0, 0, 0, 0, 0, 0];
     days.forEach((d) => { if (isOn(d)) per[d.dow]++; });
@@ -465,14 +465,14 @@
     });
   }
 
-  // átméretezéskor csak a naptár rajzolódik újra, ha más hétszám fér ki
+  // on resize, redraw the calendar only if a different number of weeks fits
   let rzT = 0;
   addEventListener("resize", () => {
     clearTimeout(rzT);
     rzT = setTimeout(() => { if (ACT && weeksFor() !== shownWeeks) renderCalendar(false); }, 150);
   });
 
-  // tooltip a naptár celláin (egér és érintés)
+  // tooltip on calendar cells (mouse and touch)
   const tip = $("#actTip");
   const hideTip = () => { if (tip) tip.hidden = true; };
   function placeTip(x, y) {
@@ -515,7 +515,7 @@
         ? top.map(([k, v], i) => `<li><span><i style="background:${langPalette[i]}"></i>${esc(k)}</span><span>${((v / total) * 100).toFixed(1)}%</span></li>`).join("")
         : `<li class="empty">${esc(U.noRepos)}</li>`;
     });
-    // csak a legújabb nyilvános projektek: létrehozás szerint, a profil-README repó nélkül
+    // newest public projects only: by creation date, excluding the profile README repo
     const list = own
       .filter((r) => r.name.toLowerCase() !== D.github.toLowerCase())
       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
@@ -531,7 +531,7 @@
   }
 
   async function loadClaude() {
-    // a data/claude.json a scripts/claude_stats.py kimenete (csak névtelen napi számok)
+    // data/claude.json is the output of scripts/claude_stats.py (anonymous daily counts only)
     const r = await fetch(`data/claude.json?t=${Math.floor(Date.now() / 600000)}`);
     if (!r.ok) throw new Error(r.status);
     return r.json();
@@ -552,18 +552,18 @@
     renderActivity();
   }
 
-  /* ---------- indulás ---------- */
+  /* ---------- startup ---------- */
   render();
   tick(); setInterval(tick, 1000);
   rotator();
-  // a hero azonnal beúszik, nem vár a görgetésfigyelőre
+  // the hero reveals immediately instead of waiting for the scroll observer
   setTimeout(() => $$(".hero .reveal").forEach((el, i) => setTimeout(() => el.classList.add("is-in"), i * 90)), 60);
   observe();
-  // biztonsági háló: ami 2,5 mp múlva is látótérben van, az mindenképp megjelenik
+  // safety net: anything still in view after 2.5 s is shown regardless
   setTimeout(() => $$(".reveal:not(.is-in)").forEach((el) => { if (el.getBoundingClientRect().top < innerHeight) el.classList.add("is-in"); }), 2500);
   countUp();
   onScroll();
-  // a GitHub-adat csak akkor töltődik, amikor a lap közel ér hozzá (kíméli a lekérési limitet)
+  // GitHub data loads only when the section is near the viewport (saves the rate limit)
   const ghIO = new IntersectionObserver((ents) => {
     if (ents.some((e) => e.isIntersecting)) { ghIO.disconnect(); loadActivity(); }
   }, { rootMargin: "800px" });

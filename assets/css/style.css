@@ -1,7 +1,7 @@
 /* ============================================================
-   AURORA — mély éjkék, menta → égkék → indigó átmenet,
-   meleg borostyán/rózsa kiemelés. Sötét + világos téma.
-   Csak CSS, kép nincs. Mobile-first finomhangolás a végén.
+   AURORA — deep night blue, mint → sky → indigo gradient,
+   warm amber/rose accents. Dark + light theme.
+   CSS only, no images. Mobile tuning at the end.
    ============================================================ */
 :root {
   --bg: #05070d;
@@ -90,7 +90,7 @@ kbd { font: 500 11px/1 var(--mono); padding: 3px 6px; border-radius: 5px; border
 .skip { position: fixed; left: 12px; top: -60px; z-index: 200; padding: 10px 14px; border-radius: 10px; background: var(--fg); color: var(--bg); font-weight: 600; }
 .skip:focus { top: 12px; }
 
-/* ---------- Háttér ---------- */
+/* ---------- Background ---------- */
 .bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
 .aurora { position: absolute; border-radius: 50%; filter: blur(110px); will-change: transform; }
 .aurora--a { width: 55vmax; height: 55vmax; left: -18vmax; top: -24vmax; background: var(--sky); opacity: calc(.22 * var(--aurora-o)); animation: drift-a 28s var(--ease) infinite alternate; }
@@ -99,7 +99,7 @@ kbd { font: 500 11px/1 var(--mono); padding: 3px 6px; border-radius: 5px; border
 @keyframes drift-a { to { transform: translate(16vw, 18vh) scale(1.1); } }
 @keyframes drift-b { to { transform: translate(-22vw, 26vh) scale(.9); } }
 @keyframes drift-c { to { transform: translate(-12vw, -30vh) scale(1.2); } }
-/* pontháló; a --lit réteg csak a kurzor körül látszik */
+/* dot grid; the --lit layer is only visible around the cursor */
 .dots {
   position: absolute; inset: 0;
   background-image: radial-gradient(var(--dot) 1px, transparent 1.4px);
@@ -162,7 +162,7 @@ html[data-theme="light"] .theme-btn .i-moon { display: none; }
 .nav__menu[aria-expanded="true"] .burger i:first-child { top: 5px; transform: rotate(45deg); }
 .nav__menu[aria-expanded="true"] .burger i:last-child { top: 5px; transform: rotate(-45deg); }
 
-/* ---------- Telefonos menü (sheet) ---------- */
+/* ---------- Mobile menu (sheet) ---------- */
 .sheet {
   position: fixed; inset: 0; z-index: 45; display: flex; flex-direction: column; justify-content: space-between;
   padding: calc(var(--nav-h) + 40px + env(safe-area-inset-top)) var(--gutter) calc(28px + env(safe-area-inset-bottom));
@@ -199,7 +199,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
 .section__head h2 { font: 700 clamp(34px, 6.4vw, 76px)/.95 var(--display); letter-spacing: -.045em; }
 .section__head p { color: var(--fg-2); font-size: clamp(16px, 1.6vw, 18px); }
 
-/* ---------- Kártya ---------- */
+/* ---------- Card ---------- */
 .card {
   position: relative; border-radius: var(--radius);
   background:
@@ -254,7 +254,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
 .scroll-cue span::after { content: ""; position: absolute; left: 50%; top: 6px; width: 3px; height: 7px; margin-left: -1.5px; border-radius: 2px; background: var(--mint); animation: wheel 1.8s var(--ease) infinite; }
 @keyframes wheel { 60% { transform: translateY(9px); opacity: 0; } 61% { transform: none; opacity: 0; } }
 
-/* azonosítókártya */
+/* ID card */
 .idcard {
   border-radius: var(--radius); padding: 22px; position: relative; overflow: hidden;
   background: linear-gradient(180deg, color-mix(in srgb, var(--surface-2) 88%, transparent), color-mix(in srgb, var(--surface) 88%, transparent));
@@ -343,7 +343,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
 .repo__desc { color: var(--fg-2); font-size: 14px; }
 .repo__meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font: 12px var(--mono); color: var(--fg-3); }
 
-/* ---------- Rólam + idővonal ---------- */
+/* ---------- About + timeline ---------- */
 .about { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; align-items: start; }
 .about__bio { padding: clamp(22px, 3vw, 34px); display: grid; gap: 14px; }
 .about__lead { font-size: clamp(18px, 2vw, 22px); line-height: 1.45; color: var(--fg); margin-bottom: 10px; }
@@ -364,7 +364,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
 .tl__detail { font-size: 14px; color: var(--fg-2); margin-top: 4px; }
 .tl__now { display: inline-block; margin-left: 8px; padding: 3px 7px; border-radius: 6px; font: 500 10px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; vertical-align: 3px; color: var(--on-accent); background: var(--accent); }
 
-/* ---------- Tudás ---------- */
+/* ---------- Skills ---------- */
 .legend { display: flex; flex-wrap: wrap; gap: 18px; font-size: 12px; color: var(--fg-2); margin: -12px 0 24px; }
 .legend span { display: inline-flex; align-items: center; gap: 8px; }
 .lv { width: 10px; height: 10px; border-radius: 3px; display: inline-block; flex: none; }
@@ -449,7 +449,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
 .footer { max-width: var(--maxw); margin: 0 auto; padding: 44px var(--gutter) calc(40px + env(safe-area-inset-bottom)); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px 20px; font-size: 12px; color: var(--fg-3); border-top: 1px solid var(--line); }
 .footer__hint { display: inline-flex; align-items: center; gap: 8px; }
 
-/* ---------- Vissza a tetejére ---------- */
+/* ---------- Back to top ---------- */
 .to-top {
   position: fixed; right: calc(18px + env(safe-area-inset-right)); bottom: calc(18px + env(safe-area-inset-bottom)); z-index: 40;
   width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center;
@@ -490,13 +490,13 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
 .palette__list li.is-sel { background: var(--mint); color: var(--on-accent); }
 .palette__list li.is-sel span:last-child { color: inherit; opacity: .7; }
 
-/* ---------- Megjelenés görgetéskor ---------- */
+/* ---------- Reveal on scroll ---------- */
 .js .reveal { opacity: 0; transform: translateY(26px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
 .js .reveal.is-in { opacity: 1; transform: none; }
 .noscript { padding: 120px 24px; text-align: center; }
 
 /* ============================================================
-   Reszponzív
+   Responsive
    ============================================================ */
 @media (max-width: 1100px) {
   .nav__links a { padding: 10px 11px; font-size: 13.5px; }
@@ -508,7 +508,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
   .stats { grid-template-columns: repeat(2, 1fr); }
   .projects { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .project--feature { grid-template-columns: 1fr; }
-  /* két oszlopban a páratlanul maradt utolsó kártya teljes szélességű */
+  /* in two columns, a leftover last card spans the full width */
   .project:not(.project--feature):last-child:nth-child(even) { grid-column: 1 / -1; }
   .about { grid-template-columns: 1fr; }
   .stack { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -517,7 +517,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
   .act-week, .gh-lang { grid-column: span 6; }
 }
 
-/* telefon / kis tablet: teljes szélességű fejléc + lenyíló menü */
+/* phone / small tablet: full-width header + slide-down menu */
 @media (max-width: 820px) {
   .nav-wrap { top: 0; padding: calc(8px + env(safe-area-inset-top)) 10px 0; }
   .nav { width: 100%; justify-content: space-between; border-radius: 22px; padding: 6px 6px 6px 6px; }
@@ -582,7 +582,7 @@ main { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
   .kpi__v { font-size: 20px; }
 }
 
-/* érintőképernyőn nincs hover-emelés */
+/* no hover lift on touch screens */
 @media (hover: none) {
   .card:hover, .btn:hover, .skill:hover { transform: none; }
 }

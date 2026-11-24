@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    /* Önéletrajz — A4, monokróm, szöveges (ATS-barát), kattintható linkek.
-       Ugyanabból a data.js-ből épül, mint a főoldal. Csak angol. */
+    /* CV — A4, monochrome, text-based (ATS-friendly), clickable links.
+       Built from the same data.js as the main page. English only. */
     @page { size: A4; margin: 0; }
     :root { --ink: #0a0a0a; --ink-2: #4a4a4a; --ink-3: #8a8a8a; --rule: #e2e2e2; }
     * { box-sizing: border-box; }
@@ -45,7 +45,7 @@
     .facts { display: grid; gap: 2.2mm; font-size: 9pt; }
     .facts div { display: grid; }
     .facts span:first-child { font-size: 7pt; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
-    /* sok skill fér el: csoportonként egy folyó sor, a tanult elemek halványabbak, °-jellel */
+    /* fits many skills: one running line per group; items still being learned are dimmed and marked with ° */
     .skills { font-size: 8.5pt; line-height: 1.45; }
     .skills span + span::before { content: " · "; color: var(--ink-3); }
     .skills span.l { color: var(--ink-3); }

@@ -168,13 +168,13 @@ window.PORTFOLIO = {
   education: [
     {
       from: "2026-09", to: null,
-      school: "Creascola Két Tanítási Nyelvű Általános Iskola és Nyolcosztályos Gimnázium",
+      school: "Creascola Bilingual Primary School and Grammar School",
       place: "Budaörs",
       detail: "11th grade · Mathematics and Informatics specialisation"
     },
     {
       from: "2024-09", to: "2026-06",
-      school: "Bálint Márton Általános Iskola és Középiskola",
+      school: "Bálint Márton Primary and Secondary School",
       place: "Törökbálint",
       detail: "Grades 9–10"
     }

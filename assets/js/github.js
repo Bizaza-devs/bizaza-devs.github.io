@@ -1,6 +1,6 @@
 /* ============================================================
-   GitHub adatok — publikus API, token nélkül (60 kérés/óra/IP).
-   10 percre gyorsítótárazva a böngészőben.
+   GitHub data — public API, no token (60 requests/hour/IP).
+   Cached in the browser for 10 minutes.
    ============================================================ */
 window.GH = (() => {
   const TTL = 10 * 60 * 1000;
@@ -35,8 +35,8 @@ window.GH = (() => {
     user: (u) => getJSON(`${api}/users/${u}`, "user"),
     repos: (u) => getJSON(`${api}/users/${u}/repos?per_page=100&sort=pushed`, "repos"),
     events: (u) => getJSON(`${api}/users/${u}/events/public?per_page=30`, "events"),
-    /* hozzájárulási naptár: a GitHub nem ad hozzá publikus REST végpontot,
-       ezért egy nyílt, kulcs nélküli proxy (github-contributions-api) adja */
+    /* contribution calendar: GitHub has no public REST endpoint for it,
+       so an open, keyless proxy (github-contributions-api) provides it */
     calendar: (u) => getJSON(`https://github-contributions-api.jogruber.de/v4/${u}?y=last`, "cal")
   };
 })();

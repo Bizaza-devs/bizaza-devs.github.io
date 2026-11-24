@@ -13,9 +13,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <!-- ?v= : új kiadásnál emeld, különben a böngésző a régi fájlt használhatja -->
+  <!-- ?v= : bump on every release, otherwise browsers may keep the old file -->
   <link rel="stylesheet" href="assets/css/style.css?v=7">
-  <!-- téma még a festés előtt (nincs villanás); a beúszó animáció csak akkor rejt el bármit, ha a JS fut -->
+  <!-- theme is set before first paint (no flash); the reveal animation only hides content when JS runs -->
   <script>
     (function () {
       var d = document.documentElement, t;
@@ -30,7 +30,7 @@
 <body>
   <a class="skip" href="#work">Skip to content</a>
 
-  <!-- Háttér: csak CSS, nincs kép -->
+  <!-- Background: CSS only, no images -->
   <div class="bg" aria-hidden="true">
     <div class="aurora aurora--a"></div>
     <div class="aurora aurora--b"></div>
@@ -57,7 +57,7 @@
     </nav>
   </header>
 
-  <!-- Telefonos menü -->
+  <!-- Mobile menu -->
   <div class="sheet" id="sheet" aria-hidden="true">
     <ol class="sheet__links" id="sheetLinks"></ol>
     <div class="sheet__foot">
@@ -148,7 +148,7 @@
       <div class="stack" id="stackGrid"></div>
     </section>
 
-    <!-- WORK ACTIVITY: GitHub + Claude egy naptárban -->
+    <!-- WORK ACTIVITY: GitHub + Claude in one calendar -->
     <section class="section" id="activity">
       <header class="section__head reveal">
         <span class="section__idx mono">04 /</span>
@@ -213,7 +213,7 @@
     <span><span data-ui="updated"></span> <span id="updated"></span></span>
   </footer>
 
-  <!-- Vissza a tetejére + görgetési gyűrű -->
+  <!-- Back to top + scroll progress ring -->
   <a class="to-top" href="#index" aria-label="Back to top">
     <svg viewBox="0 0 48 48" aria-hidden="true"><circle class="to-top__track" cx="24" cy="24" r="21"/><circle class="to-top__ring" cx="24" cy="24" r="21"/></svg>
     <span aria-hidden="true">↑</span>
