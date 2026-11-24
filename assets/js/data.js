@@ -20,21 +20,35 @@ window.PORTFOLIO = {
       "11th grade · Creascola, Budaörs",
       "building ALAN BIRTH · Collection 01 — FW26",
       "learning full-stack web development"
-    ]
+    ],
+    /* Hero: "I build …" — the words rotate */
+    builds: ["brands.", "online stores.", "Shopify themes.", "systems.", "websites."],
+    /* About section. {age} = computed age */
+    about: "I'm a {age}-year-old student from Diósd, Hungary, specialising in Mathematics and Informatics. I learn by shipping: I run my own streetwear brand, ALAN BIRTH, and I design and build the store it runs on, the systems behind it — and this site."
   },
+
+  /* About › timeline, oldest first. accent: mint | sky | indigo | rose | amber; now: true = in progress */
+  timeline: [
+    { when: "2024", title: "Bálint Márton School", detail: "Törökbálint · grades 9–10", accent: "sky" },
+    { when: "2025", title: "Founded ALAN BIRTH", detail: "Streetwear brand, plus a custom Shopify theme I design and build myself", accent: "amber" },
+    { when: "2026", title: "Built my Second Brain", detail: "Obsidian vault wired to Claude Code and Git — 226 notes", accent: "indigo" },
+    { when: "2026", title: "Launched this portfolio", detail: "Plain HTML, CSS & JavaScript on GitHub Pages", accent: "mint" },
+    { when: "Sep 2026", title: "Creascola, Budaörs", detail: "11th grade · Mathematics and Informatics specialisation", accent: "sky" },
+    { when: "FW26", title: "Collection 01", detail: "The first ALAN BIRTH collection — in progress", accent: "amber", now: true }
+  ],
 
   /* Real numbers from my second brain (2026-11-23). value "age" = computed from the birth date */
   stats: [
-    { value: 26, unit: "", label: "Theme versions", note: "shipped on alanbirth.com", color: "coral" },
-    { value: 226, unit: "", label: "Notes", note: "in my Obsidian second brain", color: "violet" },
-    { value: 3, unit: "", label: "Projects", note: "live or in progress", color: "blue" },
-    { value: "age", unit: "yrs", label: "Age", note: "born October 2009", color: "lime" }
+    { value: 26, unit: "", label: "Theme versions", note: "shipped on alanbirth.com", color: "amber" },
+    { value: 226, unit: "", label: "Notes", note: "in my Obsidian second brain", color: "indigo" },
+    { value: 3, unit: "", label: "Projects", note: "live or in progress", color: "sky" },
+    { value: "age", unit: "yrs", label: "Age", note: "born October 2009", color: "mint" }
   ],
 
   /* status: live | building */
   projects: [
     {
-      id: "alanbirth", accent: "coral",
+      id: "alanbirth", accent: "amber",
       name: "ALAN BIRTH",
       year: "2025 —",
       status: "building",
@@ -51,7 +65,7 @@ window.PORTFOLIO = {
       repo: null
     },
     {
-      id: "secondbrain", accent: "violet",
+      id: "secondbrain", accent: "indigo",
       name: "Second Brain",
       year: "2026",
       status: "live",
@@ -67,7 +81,7 @@ window.PORTFOLIO = {
       repo: null
     },
     {
-      id: "portfolio", accent: "lime",
+      id: "portfolio", accent: "mint",
       name: "This portfolio",
       year: "2026",
       status: "live",
@@ -147,8 +161,19 @@ window.PORTFOLIO.age = (() => {
 
 /* Interface strings */
 window.UI = {
-  nav: ["Index", "Work", "Stack", "Activity", "Contact"],
+  nav: ["Index", "Work", "About", "Stack", "Activity", "Contact"],
   local: "Local time",
+  iBuild: "I build",
+  about: "About",
+  aboutSub: "Who I am, what I'm doing now, and how I got here.",
+  now: "Right now",
+  interests: "Outside the screen",
+  copied: "Email copied ✓",
+  copyFail: "Couldn't copy — long-press the address instead",
+  themeLight: "Light theme",
+  themeDark: "Dark theme",
+  toggleTheme: "Toggle theme",
+  paletteHint: "for commands",
   work: "Selected work",
   workSub: "What I have built and what I am building now.",
   latest: "Latest public repositories",

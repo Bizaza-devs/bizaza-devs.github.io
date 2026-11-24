@@ -9,8 +9,11 @@
   const set = (sel, fn) => { const el = $(sel); if (el) fn(el); }; // hiányzó elem ne állítsa le az oldalt
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const SECTIONS = ["index", "work", "stack", "activity", "contact"];
-  const ACCENT = { coral: "var(--coral)", violet: "var(--violet)", blue: "var(--blue)", lime: "var(--lime)" };
+  const finePointer = matchMedia("(pointer: fine)").matches;
+  const root = document.documentElement;
+  const SECTIONS = ["index", "work", "about", "stack", "activity", "contact"];
+  const ACCENTS = ["mint", "sky", "indigo", "rose", "amber"];
+  const acc = (name, fallback = "mint") => `var(--${ACCENTS.includes(name) ? name : fallback})`;
   const school = D.education.find((e) => !e.to) || D.education[0];
 
   /* ---------- renderelés ---------- */
@@ -18,7 +21,16 @@
     $$("[data-ui]").forEach((el) => { if (U[el.dataset.ui] != null) el.textContent = U[el.dataset.ui]; });
     $$(".cv-link").forEach((a) => { a.href = D.cvPdf; });
 
-    set("#navLinks", (el) => { el.innerHTML = SECTIONS.map((id, i) => `<li><a href="#${id}" data-nav="${id}">${U.nav[i]}</a></li>`).join(""); });
+    set("#navLinks", (el) => { el.innerHTML = SECTIONS.map((id, i) => `<li><a href="#${id}" data-nav="${id}">${esc(U.nav[i])}</a></li>`).join(""); });
+    set("#sheetLinks", (el) => {
+      el.innerHTML = SECTIONS.map((id, i) => `<li><a href="#${id}" data-nav="${id}" style="--i:${i}"><small>${String(i).padStart(2, "0")}</small>${esc(U.nav[i])}</a></li>`).join("");
+    });
+    set("#sheetSocial", (el) => {
+      el.innerHTML = [
+        ...D.contact.links.map((l) => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`),
+        ...(D.contact.email ? [`<a href="mailto:${esc(D.contact.email)}">Email ↗</a>`] : [])
+      ].join("");
+    });
 
     // hero
     const [first, ...rest] = D.person.name.split(" ");
@@ -26,10 +38,11 @@
     set("#heroChip", (el) => { el.textContent = `${school.detail.split(" · ")[0]} · ${school.place}`; });
     set("#heroRole", (el) => { el.textContent = D.person.role; });
     set("#heroTagline", (el) => { el.textContent = D.person.tagline; });
+    set("#heroRot", (el) => { el.textContent = (D.person.builds || [""])[0]; });
+    set("#idName", (el) => { el.textContent = D.person.name; });
 
     set("#idcard", (el) => {
       const rows = [
-        ["Name", D.person.name],
         ["Age", `${D.age}`],
         ["Base", D.person.location],
         ["School", `${school.short || school.school.split(" ")[0]} · ${school.place}`],
@@ -53,7 +66,7 @@
     set("#stats", (el) => {
       el.innerHTML = D.stats.map((s, i) => {
         const v = s.value === "age" ? D.age : s.value;
-        return `<div class="stat" style="--stat-c:${ACCENT[s.color] || "var(--lime)"}">
+        return `<div class="stat" style="--stat-c:${acc(s.color)}">
           <div class="stat__top mono"><span>${String(i + 1).padStart(2, "0")}</span><span>${esc(s.label)}</span></div>
           <div class="stat__v"><span data-count="${v}">0</span>${s.unit ? `<small>${esc(s.unit)}</small>` : ""}</div>
           <div class="stat__n">${esc(s.note)}</div>
@@ -82,11 +95,24 @@
           <div class="tags">${p.stack.map((s) => `<span class="tag">${esc(s)}</span>`).join("")}</div>
           ${links.length ? `<div class="project__links">${links.map((l) => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`).join("")}</div>` : ""}
           <div class="project__metrics">${p.metrics.map((m) => `<div><div class="metric__v">${esc(m.v)}</div><div class="metric__k mono">${esc(m.k)}</div></div>`).join("")}</div>`;
-        const style = `style="--accent:${ACCENT[p.accent] || "var(--lime)"}"`;
+        const style = `style="--accent:${acc(p.accent)}"`;
         return i === 0
           ? `<article class="card project project--feature reveal" id="p-${esc(p.id)}" ${style}><div>${head}${body}</div><div class="project__side">${side}</div></article>`
           : `<article class="card project reveal" id="p-${esc(p.id)}" ${style}>${head}${body}${side}</article>`;
       }).join("");
+    });
+
+    // rólam + idővonal
+    set("#aboutLead", (el) => { el.textContent = (D.person.about || D.person.tagline).replace("{age}", D.age); });
+    set("#aboutNow", (el) => { el.innerHTML = D.person.status.map((s) => `<li>${esc(s)}</li>`).join(""); });
+    set("#aboutInterests", (el) => { el.innerHTML = (D.interests || []).map((s) => `<span>${esc(s)}</span>`).join(""); });
+    set("#timeline", (el) => {
+      el.innerHTML = (D.timeline || []).map((t) => `
+        <li class="card tl reveal${t.now ? " is-now" : ""}" style="--accent:${acc(t.accent, "sky")}">
+          <div class="tl__when">${esc(t.when)}</div>
+          <div class="tl__title">${esc(t.title)}${t.now ? `<span class="tl__now">${esc(U.status.building)}</span>` : ""}</div>
+          <div class="tl__detail">${esc(t.detail)}</div>
+        </li>`).join("");
     });
 
     // tudás
@@ -101,7 +127,10 @@
 
     // kapcsolat
     const c = D.contact;
-    set("#contactMail", (el) => { if (c.email) { el.href = `mailto:${c.email}`; el.textContent = c.email; } else el.remove(); });
+    set("#contactMail", (el) => {
+      if (c.email) { el.href = `mailto:${c.email}`; el.textContent = c.email; }
+      else { el.closest(".contact__mailrow")?.remove(); }
+    });
     set("#contactLinks", (el) => {
       el.innerHTML = [
         `<a class="btn btn--grad" href="${esc(D.cvPdf)}" download>${esc(U.cv)} <span class="btn__ext mono">PDF ↓</span></a>`,
@@ -116,6 +145,68 @@
   /* ---------- óra ---------- */
   const fmt = new Intl.DateTimeFormat("en-GB", { timeZone: D.timezone, hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false });
   const tick = () => set("#clock", (el) => { el.textContent = fmt.format(new Date()) + " CET"; });
+
+  /* ---------- "I build …" forgó szó ---------- */
+  function rotator() {
+    const el = $("#heroRot"), words = D.person.builds || [];
+    if (!el || words.length < 2) return;
+    let i = 0;
+    setInterval(() => {
+      if (document.hidden) return;
+      i = (i + 1) % words.length;
+      if (reduced) { el.textContent = words[i]; return; }
+      el.classList.remove("is-in"); el.classList.add("is-out");
+      setTimeout(() => { el.textContent = words[i]; el.classList.remove("is-out"); void el.offsetWidth; el.classList.add("is-in"); }, 340);
+    }, 2600);
+  }
+
+  /* ---------- téma ---------- */
+  const metaTheme = $('meta[name="theme-color"]');
+  function applyTheme(t, save) {
+    root.setAttribute("data-theme", t);
+    if (metaTheme) metaTheme.content = t === "light" ? "#f4f6fb" : "#05070d";
+    $$(".theme-btn").forEach((b) => b.setAttribute("aria-pressed", t === "light"));
+    if (save) { try { localStorage.setItem("theme", t); } catch (e) { /* privát mód */ } }
+  }
+  const toggleTheme = () => applyTheme(root.getAttribute("data-theme") === "light" ? "dark" : "light", true);
+  applyTheme(root.getAttribute("data-theme") || "dark", false);
+  $$(".theme-btn").forEach((b) => b.addEventListener("click", () => {
+    toggleTheme();
+    // az ikon animációja újrainduljon
+    $$("svg", b).forEach((s) => { s.style.animation = "none"; void s.getBoundingClientRect(); s.style.animation = ""; });
+  }));
+
+  /* ---------- telefonos menü ---------- */
+  const sheet = $("#sheet"), menuBtn = $("#menuBtn");
+  function setMenu(open) {
+    if (!sheet || !menuBtn) return;
+    sheet.classList.toggle("is-open", open);
+    sheet.setAttribute("aria-hidden", String(!open));
+    menuBtn.setAttribute("aria-expanded", String(open));
+    menuBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    root.classList.toggle("no-scroll", open);
+    if ("inert" in sheet) sheet.inert = !open;
+  }
+  if (sheet && menuBtn) {
+    if ("inert" in sheet) sheet.inert = true;
+    menuBtn.addEventListener("click", () => setMenu(!sheet.classList.contains("is-open")));
+    sheet.addEventListener("click", (e) => { if (e.target.closest("a")) setMenu(false); });
+    addEventListener("resize", () => { if (innerWidth > 820 && sheet.classList.contains("is-open")) setMenu(false); });
+  }
+
+  /* ---------- toast + e-mail másolás ---------- */
+  const toastEl = $("#toast");
+  let toastT = 0;
+  function toast(msg) {
+    if (!toastEl) return;
+    toastEl.textContent = msg; toastEl.classList.add("is-show");
+    clearTimeout(toastT); toastT = setTimeout(() => toastEl.classList.remove("is-show"), 2200);
+  }
+  async function copyEmail() {
+    try { await navigator.clipboard.writeText(D.contact.email); toast(U.copied); }
+    catch (e) { toast(U.copyFail); }
+  }
+  set("#copyMail", (b) => b.addEventListener("click", copyEmail));
 
   /* ---------- megjelenés görgetéskor ---------- */
   function observe() {
@@ -144,39 +235,55 @@
     els.forEach((el) => io.observe(el));
   }
 
-  /* ---------- kurzor: a pontháló felizzik körülötte ---------- */
-  if (!reduced && matchMedia("(pointer: fine)").matches) {
-    const root = document.documentElement;
-    let raf = 0, x = 0, y = 0;
+  /* ---------- kurzor: pontháló + kártya-reflektor (csak egérrel) ---------- */
+  if (!reduced && finePointer) {
+    let raf = 0, x = 0, y = 0, card = null;
     addEventListener("pointermove", (e) => {
-      x = e.clientX; y = e.clientY;
-      if (!raf) raf = requestAnimationFrame(() => { root.style.setProperty("--cx", x + "px"); root.style.setProperty("--cy", y + "px"); raf = 0; });
+      x = e.clientX; y = e.clientY; card = e.target.closest?.(".card");
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        root.style.setProperty("--cx", x + "px"); root.style.setProperty("--cy", y + "px");
+        if (card) { const r = card.getBoundingClientRect(); card.style.setProperty("--mx", x - r.left + "px"); card.style.setProperty("--my", y - r.top + "px"); }
+        raf = 0;
+      });
     }, { passive: true });
   }
 
-  /* ---------- görgetés: progress + aktív menüpont ---------- */
-  const bar = $(".progress span");
+  /* ---------- görgetés: gyűrű + aktív menüpont ---------- */
+  const toTop = $(".to-top"), ring = $(".to-top__ring");
+  const RING = 2 * Math.PI * 21;
   function setActive() {
     const y = scrollY + innerHeight * 0.35;
     let cur = SECTIONS[0];
     SECTIONS.forEach((id) => { const s = document.getElementById(id); if (s && s.offsetTop <= y) cur = id; });
-    $$("[data-nav]").forEach((a) => a.classList.toggle("is-active", a.dataset.nav === cur));
+    $$("[data-nav]").forEach((a) => {
+      const on = a.dataset.nav === cur;
+      a.classList.toggle("is-active", on);
+      if (on) a.setAttribute("aria-current", "true"); else a.removeAttribute("aria-current");
+    });
   }
-  addEventListener("scroll", () => {
-    const max = document.documentElement.scrollHeight - innerHeight;
-    if (bar) bar.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
+  function onScroll() {
+    const max = root.scrollHeight - innerHeight;
+    const p = max > 0 ? Math.min(1, scrollY / max) : 0;
+    if (ring) ring.style.strokeDashoffset = String(RING * (1 - p));
+    if (toTop) toTop.classList.toggle("is-show", scrollY > 600);
     setActive();
-  }, { passive: true });
+  }
+  addEventListener("scroll", onScroll, { passive: true });
 
-  /* ---------- rejtett parancspaletta: Ctrl K / ⌘K / "/" ---------- */
+  /* ---------- parancspaletta: Ctrl K / ⌘K / "/" ---------- */
   const pal = $("#palette"), pin = $("#paletteInput"), plist = $("#paletteList");
   let sel = 0, items = [];
   const commands = () => [
     ...SECTIONS.map((id, i) => ({ label: U.nav[i], hint: "#" + id, run: () => document.getElementById(id).scrollIntoView() })),
     ...D.projects.map((p) => ({ label: p.name, hint: p.kind, run: () => document.getElementById("p-" + p.id).scrollIntoView({ block: "center" }) })),
+    { label: U.toggleTheme, hint: root.getAttribute("data-theme") === "light" ? U.themeDark : U.themeLight, run: toggleTheme },
     { label: U.cv, hint: "PDF", run: () => { const a = document.createElement("a"); a.href = D.cvPdf; a.download = ""; a.click(); } },
     { label: "GitHub ↗", hint: "@" + D.github, run: () => open(`https://github.com/${D.github}`, "_blank", "noopener") },
-    ...(D.contact.email ? [{ label: "Email ↗", hint: D.contact.email, run: () => (location.href = "mailto:" + D.contact.email) }] : [])
+    ...(D.contact.email ? [
+      { label: "Email ↗", hint: D.contact.email, run: () => (location.href = "mailto:" + D.contact.email) },
+      { label: "Copy email", hint: "clipboard", run: copyEmail }
+    ] : [])
   ];
   function drawPalette() {
     const q = pin.value.trim().toLowerCase();
@@ -191,20 +298,22 @@
     pin.addEventListener("input", () => { sel = 0; drawPalette(); });
     plist.addEventListener("click", (e) => { const li = e.target.closest("li"); if (li) { sel = +li.dataset.i; runSel(); } });
     pal.addEventListener("click", (e) => { if (e.target === pal) closePalette(); });
-    document.addEventListener("keydown", (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); pal.hidden ? openPalette() : closePalette(); return; }
-      if (pal.hidden) { if (e.key === "/" && !/input|textarea/i.test(document.activeElement.tagName)) { e.preventDefault(); openPalette(); } return; }
-      if (e.key === "Escape") closePalette();
-      else if (e.key === "ArrowDown") { e.preventDefault(); sel = (sel + 1) % Math.max(1, items.length); drawPalette(); }
-      else if (e.key === "ArrowUp") { e.preventDefault(); sel = (sel - 1 + items.length) % Math.max(1, items.length); drawPalette(); }
-      else if (e.key === "Enter") { e.preventDefault(); runSel(); }
-    });
   }
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && sheet?.classList.contains("is-open")) { setMenu(false); menuBtn?.focus(); return; }
+    if (!pal || !pin || !plist) return;
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); pal.hidden ? openPalette() : closePalette(); return; }
+    if (pal.hidden) { if (e.key === "/" && !/input|textarea/i.test(document.activeElement.tagName)) { e.preventDefault(); openPalette(); } return; }
+    if (e.key === "Escape") closePalette();
+    else if (e.key === "ArrowDown") { e.preventDefault(); sel = (sel + 1) % Math.max(1, items.length); drawPalette(); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); sel = (sel - 1 + items.length) % Math.max(1, items.length); drawPalette(); }
+    else if (e.key === "Enter") { e.preventDefault(); runSel(); }
+  });
 
   /* ============================================================
      Work activity — GitHub + Claude egy naptárban
      ============================================================ */
-  const palette = ["#c8ff3d", "#a35bff", "#4d6bfe", "#ff5b3a", "#ffd23f", "#3ddcff"];
+  const langPalette = ["var(--mint)", "var(--sky)", "var(--indigo)", "var(--rose)", "var(--amber)", "var(--fg-3)"];
   const compact = new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 });
   const dayFmt = new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
   const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -265,54 +374,82 @@
     return { cur, best };
   }
 
-  let ACT = null, mode = "all";
+  let ACT = null, mode = "all", shownWeeks = 0;
 
-  function renderActivity() {
+  // hány hét fér ki: legalább ~10 px-es cellák, így telefonon nem kell oldalra görgetni
+  function weeksFor() {
+    const box = $(".gh-cal__scroll");
+    const total = Math.ceil(ACT.days.length / 7);
+    const w = box ? box.clientWidth : 800;
+    return Math.max(12, Math.min(total, Math.floor((w + 3) / 13)));
+  }
+
+  function renderCalendar(animate = true) {
     if (!ACT) return;
-    const { days, claude, user, repos } = ACT;
+    const { days } = ACT;
+    const total = Math.ceil(days.length / 7);
+    const N = weeksFor();
+    shownWeeks = N;
+    const from = (total - N) * 7;
+    const vis = days.slice(from);
     const sc = scaler(days.map((d) => d.code)), sp = scaler(days.map((d) => d.prompts));
-    const isOn = { all: (d) => d.code > 0 || d.prompts > 0, code: (d) => d.code > 0, claude: (d) => d.prompts > 0 }[mode];
 
     set("#actCal", (el) => {
-      const cells = days.map((d, i) => {
-        const c = sc(d.code), p = sp(d.prompts);
+      el.style.setProperty("--weeks", N);
+      el.setAttribute("aria-label", `Activity calendar, last ${N} weeks`);
+      el.innerHTML = vis.map((d, j) => {
+        const i = from + j, c = sc(d.code), p = sp(d.prompts);
         let k = "", l = 0;
         if (mode === "code") { k = c ? "code" : ""; l = level(c); }
         else if (mode === "claude") { k = p ? "claude" : ""; l = level(p); }
         else if (c || p) { k = c && p ? (c > p * 2 ? "code" : p > c * 2 ? "claude" : "both") : c ? "code" : "claude"; l = level(Math.max(c, p)); }
-        const delay = reduced ? 0 : Math.min(900, Math.floor(i / 7) * 14);
+        const delay = reduced || !animate ? 0 : Math.min(900, Math.floor(j / 7) * 16);
         return `<i data-i="${i}"${k ? ` data-k="${k}"` : ""} data-l="${l}" style="animation-delay:${delay}ms"></i>`;
-      });
-      el.innerHTML = cells.join("");
+      }).join("");
     });
+
+    // hónapnevek pontosan a hét-oszlopok fölé, ütközés nélkül
     const mf = new Intl.DateTimeFormat("en", { month: "short" });
-    const months = [];
-    for (let i = 0; i < days.length; i += 61) months.push(mf.format(new Date(days[i].date + "T00:00:00")));
-    set("#actMonths", (el) => { el.innerHTML = months.map((m) => `<span>${esc(m)}</span>`).join(""); });
+    const labels = [];
+    let lastM = -1, lastCol = -9;
+    for (let w = 0; w < N; w++) {
+      const d = new Date(vis[w * 7].date + "T00:00:00");
+      const m = d.getMonth();
+      if (m !== lastM && w - lastCol >= 3 && (w > 0 || d.getDate() <= 7)) { labels.push(`<span style="grid-column:${w + 1}">${mf.format(d)}</span>`); lastCol = w; }
+      lastM = m;
+    }
+    set("#actMonths", (el) => { el.style.setProperty("--weeks", N); el.innerHTML = labels.join(""); });
+  }
+
+  function renderActivity() {
+    if (!ACT) return;
+    const { days, repos } = ACT;
+    const isOn = { all: (d) => d.code > 0 || d.prompts > 0, code: (d) => d.code > 0, claude: (d) => d.prompts > 0 }[mode];
+    renderCalendar();
 
     const yr = days.reduce((a, d) => ({ code: a.code + d.code, prompts: a.prompts + d.prompts, sessions: a.sessions + d.sessions, tokens: a.tokens + d.tokens }), { code: 0, prompts: 0, sessions: 0, tokens: 0 });
     const activeDays = days.filter(isOn).length;
     const total = { all: activeDays, code: yr.code, claude: yr.prompts }[mode];
     const label = { all: "active days in the last year", code: "contributions in the last year", claude: "Claude prompts in the last year" }[mode];
-    set("#actTotal", (el) => { el.textContent = total.toLocaleString("en"); el.style.setProperty("--act-grad", { all: "var(--grad)", code: "var(--lime)", claude: "var(--violet)" }[mode]); });
+    set("#actTotal", (el) => { el.textContent = total.toLocaleString("en"); el.style.setProperty("--act-grad", { all: "var(--grad)", code: "var(--mint)", claude: "var(--indigo)" }[mode]); });
     set("#actTotalLabel", (el) => { el.textContent = label; });
     set("#actLegend", (el) => {
       el.innerHTML = mode === "all"
-        ? `<span><i style="background:var(--lime)"></i>Code (GitHub)</span><span><i style="background:var(--violet)"></i>Claude</span><span><i style="background:linear-gradient(135deg,var(--lime),var(--violet))"></i>Both</span>`
-        : `<span>Less</span>${[1, 2, 3, 4].map((l) => `<i style="background:var(--${mode === "code" ? "lime" : "violet"});opacity:${[0.32, 0.55, 0.8, 1][l - 1]}"></i>`).join("")}<span>More</span>`;
+        ? `<span><i style="background:var(--mint)"></i>Code (GitHub)</span><span><i style="background:var(--indigo)"></i>Claude</span><span><i style="background:linear-gradient(135deg,var(--mint),var(--indigo))"></i>Both</span>`
+        : `<span>${esc(U.less)}</span>${[1, 2, 3, 4].map((l) => `<i style="background:var(--${mode === "code" ? "mint" : "indigo"});opacity:${[0.32, 0.55, 0.8, 1][l - 1]}"></i>`).join("")}<span>${esc(U.more)}</span>`;
     });
 
     const st = streaks(days, isOn);
     const own = (repos || []).filter((r) => !r.fork);
     const kpis = [
-      ["Contributions", yr.code, "lime"],
-      ["Repositories", own.length, "lime"],
-      ["Claude prompts", yr.prompts, "violet"],
-      ["Claude sessions", yr.sessions, "violet"],
-      ["Tokens", compact.format(yr.tokens), "blue"],
-      ["Active days", activeDays, "coral"],
-      ["Streak", `${st.cur}d`, "coral"],
-      ["Best streak", `${st.best}d`, "blue"]
+      ["Contributions", yr.code, "mint"],
+      ["Repositories", own.length, "mint"],
+      ["Claude prompts", yr.prompts, "indigo"],
+      ["Claude sessions", yr.sessions, "indigo"],
+      ["Tokens", compact.format(yr.tokens), "sky"],
+      ["Active days", activeDays, "amber"],
+      ["Streak", `${st.cur}d`, "rose"],
+      ["Best streak", `${st.best}d`, "sky"]
     ];
     set("#actKpis", (el) => {
       el.innerHTML = kpis.map(([k, v, c]) => `<div class="card kpi" style="--accent:var(--${c})"><span class="kpi__v">${esc(v)}</span><span class="kpi__k mono">${esc(k)}</span></div>`).join("");
@@ -326,34 +463,43 @@
     set("#actWeek", (el) => {
       el.innerHTML = order.map((w, i) => `<div><b style="height:${Math.max(3, (per[w] / max) * 100)}%;animation-delay:${i * 60}ms"></b><span><span class="n">${per[w]}</span><br>${names[w]}</span></div>`).join("");
     });
-
-    if (user) set("#ghFollowers", (el) => { el.textContent = user.followers; });
   }
 
-  // tooltip a naptár celláin
+  // átméretezéskor csak a naptár rajzolódik újra, ha más hétszám fér ki
+  let rzT = 0;
+  addEventListener("resize", () => {
+    clearTimeout(rzT);
+    rzT = setTimeout(() => { if (ACT && weeksFor() !== shownWeeks) renderCalendar(false); }, 150);
+  });
+
+  // tooltip a naptár celláin (egér és érintés)
   const tip = $("#actTip");
+  const hideTip = () => { if (tip) tip.hidden = true; };
+  function placeTip(x, y) {
+    const w = tip.offsetWidth;
+    tip.style.left = Math.max(8, Math.min(innerWidth - w - 8, x - w / 2)) + "px";
+    tip.style.top = Math.max(8, y - 50) + "px";
+  }
   set("#actCal", (grid) => {
     grid.addEventListener("pointerover", (e) => {
       const c = e.target.closest("i[data-i]");
       if (!c || !ACT || !tip) return;
       const d = ACT.days[+c.dataset.i];
-      tip.innerHTML = `${dayFmt.format(new Date(d.date + "T00:00:00"))} · <b>${d.code} contribution${d.code === 1 ? "" : "s"}</b> · <em>${d.prompts} Claude prompt${d.prompts === 1 ? "" : "s"}</em>`;
+      tip.innerHTML = `${dayFmt.format(new Date(d.date + "T00:00:00"))} · <b>${d.code} contribution${d.code === 1 ? "" : "s"}</b> · <em>${d.prompts} prompt${d.prompts === 1 ? "" : "s"}</em>`;
       tip.hidden = false;
+      placeTip(e.clientX, e.clientY);
     });
-    grid.addEventListener("pointermove", (e) => {
-      if (!tip || tip.hidden) return;
-      const w = tip.offsetWidth;
-      tip.style.left = Math.max(8, Math.min(innerWidth - w - 8, e.clientX - w / 2)) + "px";
-      tip.style.top = e.clientY - 46 + "px";
-    });
-    grid.addEventListener("pointerleave", () => { if (tip) tip.hidden = true; });
+    grid.addEventListener("pointermove", (e) => { if (tip && !tip.hidden) placeTip(e.clientX, e.clientY); });
+    grid.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") hideTip(); });
   });
+  addEventListener("scroll", hideTip, { passive: true });
+  document.addEventListener("pointerdown", (e) => { if (!e.target.closest("#actCal")) hideTip(); });
 
   set("#actTabs", (tabs) => tabs.addEventListener("click", (e) => {
     const b = e.target.closest("button[data-mode]");
     if (!b) return;
     mode = b.dataset.mode;
-    $$("button", tabs).forEach((x) => { x.classList.toggle("is-on", x === b); x.setAttribute("aria-selected", x === b); });
+    $$("button", tabs).forEach((x) => { x.classList.toggle("is-on", x === b); x.setAttribute("aria-selected", String(x === b)); });
     renderActivity();
   }));
 
@@ -363,10 +509,10 @@
     own.forEach((r) => { if (r.language) langs[r.language] = (langs[r.language] || 0) + (r.size || 1); });
     const total = Object.values(langs).reduce((a, b) => a + b, 0);
     const top = Object.entries(langs).sort((a, b) => b[1] - a[1]).slice(0, 6);
-    set("#ghLangBar", (el) => { el.innerHTML = top.map(([, v], i) => `<span style="width:${(v / total) * 100}%;background:${palette[i]}"></span>`).join(""); });
+    set("#ghLangBar", (el) => { el.innerHTML = top.map(([, v], i) => `<span style="width:${(v / total) * 100}%;background:${langPalette[i]}"></span>`).join(""); });
     set("#ghLangList", (el) => {
       el.innerHTML = top.length
-        ? top.map(([k, v], i) => `<li><span><i style="background:${palette[i]}"></i>${esc(k)}</span><span>${((v / total) * 100).toFixed(1)}%</span></li>`).join("")
+        ? top.map(([k, v], i) => `<li><span><i style="background:${langPalette[i]}"></i>${esc(k)}</span><span>${((v / total) * 100).toFixed(1)}%</span></li>`).join("")
         : `<li class="empty">${esc(U.noRepos)}</li>`;
     });
     // csak a legújabb nyilvános projektek: létrehozás szerint, a profil-README repó nélkül
@@ -409,13 +555,14 @@
   /* ---------- indulás ---------- */
   render();
   tick(); setInterval(tick, 1000);
+  rotator();
   // a hero azonnal beúszik, nem vár a görgetésfigyelőre
   setTimeout(() => $$(".hero .reveal").forEach((el, i) => setTimeout(() => el.classList.add("is-in"), i * 90)), 60);
   observe();
   // biztonsági háló: ami 2,5 mp múlva is látótérben van, az mindenképp megjelenik
   setTimeout(() => $$(".reveal:not(.is-in)").forEach((el) => { if (el.getBoundingClientRect().top < innerHeight) el.classList.add("is-in"); }), 2500);
   countUp();
-  setActive();
+  onScroll();
   // a GitHub-adat csak akkor töltődik, amikor a lap közel ér hozzá (kíméli a lekérési limitet)
   const ghIO = new IntersectionObserver((ents) => {
     if (ents.some((e) => e.isIntersecting)) { ghIO.disconnect(); loadActivity(); }
