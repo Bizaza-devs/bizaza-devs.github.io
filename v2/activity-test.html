@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Activity v2 — test page</title>
+  <meta name="robots" content="noindex">
+  <style>
+    /* minimal stand-in for the v2 page tokens */
+    :root, [data-theme="dark"] {
+      --bg: #07080c; --surface: #0f1117; --fg: #eceef4; --muted: #8b90a0; --line: rgba(255,255,255,.09);
+      --accent: #3ef2c0; --accent-2: #8b8cff; --accent-3: #38bdf8;
+      --font-display: "Inter Tight", "Segoe UI", system-ui, sans-serif;
+      --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+      --radius: 18px;
+      color-scheme: dark;
+    }
+    [data-theme="light"] {
+      --bg: #f4f5f8; --surface: #ffffff; --fg: #12141a; --muted: #5d6372; --line: rgba(15,20,30,.1);
+      --accent: #0b9e7c; --accent-2: #5856d6; --accent-3: #0284c7;
+      color-scheme: light;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font-body); }
+    main { max-width: 1180px; margin: 0 auto; padding: 32px 20px 80px; }
+    header { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+    h2 { font: 700 clamp(28px, 5vw, 44px)/1 var(--font-display); letter-spacing: -.03em; margin: 0 0 6px; }
+    p { margin: 0; color: var(--muted); }
+    .tools { display: flex; gap: 8px; }
+    .tools button, .tools a {
+      font: 600 12px/1 var(--font-mono); padding: 9px 12px; border-radius: 999px; cursor: pointer;
+      background: var(--surface); color: var(--fg); border: 1px solid var(--line); text-decoration: none;
+    }
+  </style>
+  <link rel="stylesheet" href="activity.css">
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h2>Work activity</h2>
+        <p>Shipping code on GitHub and building with Claude.</p>
+      </div>
+      <div class="tools">
+        <button type="button" id="theme">Toggle theme</button>
+        <a id="offline" href="?offline=1">Simulate offline</a>
+      </div>
+    </header>
+    <section id="activity">
+      <div id="activityV2"></div>
+    </section>
+  </main>
+
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/github.js"></script>
+  <script>
+    // test hooks: ?offline=1 makes every request fail (empty-state check)
+    if (new URLSearchParams(location.search).has("offline")) {
+      document.getElementById("activityV2").dataset.claudeSrc = "../data/missing.json";
+      const fail = () => Promise.reject(new Error("offline (test)"));
+      window.GH = { user: fail, repos: fail, events: fail, calendar: fail };
+      const a = document.getElementById("offline"); a.href = "?"; a.textContent = "Back online";
+    }
+    try { const t = localStorage.getItem("theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+    document.getElementById("theme").addEventListener("click", () => {
+      const r = document.documentElement, t = r.dataset.theme === "light" ? "dark" : "light";
+      r.dataset.theme = t;
+      try { localStorage.setItem("theme", t); } catch (e) {}
+      document.dispatchEvent(new CustomEvent("themechange", { detail: { theme: t } }));
+    });
+  </script>
+  <script src="activity.js"></script>
+</body>
+</html>
