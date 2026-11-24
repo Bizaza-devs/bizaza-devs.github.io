@@ -1,5 +1,11 @@
 # bizaza-devs.github.io
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/portfolio-preview-dark.jpg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/images/portfolio-light.jpg">
+  <img alt="Portfolio: desktop and phone layout" src="docs/images/portfolio-preview-dark.jpg">
+</picture>
+
 Personal portfolio of **Zalan Birtalan** — student developer, founder of ALAN BIRTH.
 
 Aurora: deep night-blue, mint → sky → indigo gradients with warm amber/rose accents, bold type. Dark and light theme. **0 images, 0 frameworks, 0 dependencies** — plain HTML, CSS and JavaScript.
