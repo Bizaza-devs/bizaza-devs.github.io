@@ -7,7 +7,7 @@
 window.PORTFOLIO = {
   github: "Bizaza-devs",
   timezone: "Europe/Budapest",
-  updated: "2026-11-23",
+  updated: "2026-11-24",
   cvPdf: "cv/Zalan-Birtalan-CV.pdf",
 
   person: {
@@ -33,6 +33,7 @@ window.PORTFOLIO = {
     { when: "2025", title: "Founded ALAN BIRTH", detail: "Streetwear brand, plus a custom Shopify theme I design and build myself", accent: "amber" },
     { when: "2026", title: "Built my Second Brain", detail: "Obsidian vault wired to Claude Code and Git — 226 notes", accent: "indigo" },
     { when: "2026", title: "Launched this portfolio", detail: "Plain HTML, CSS & JavaScript on GitHub Pages", accent: "mint" },
+    { when: "2026", title: "Vivaldi Workspace", detail: "Gemini Panel browser extension, a privacy setup script and a macOS-style UI", accent: "sky" },
     { when: "Sep 2026", title: "Creascola, Budaörs", detail: "11th grade · Mathematics and Informatics specialisation", accent: "sky" },
     { when: "FW26", title: "Collection 01", detail: "The first ALAN BIRTH collection — in progress", accent: "amber", now: true }
   ],
@@ -41,7 +42,7 @@ window.PORTFOLIO = {
   stats: [
     { value: 26, unit: "", label: "Theme versions", note: "shipped on alanbirth.com", color: "amber" },
     { value: 226, unit: "", label: "Notes", note: "in my Obsidian second brain", color: "indigo" },
-    { value: 3, unit: "", label: "Projects", note: "live or in progress", color: "sky" },
+    { value: 4, unit: "", label: "Projects", note: "live or in progress", color: "sky" },
     { value: "age", unit: "yrs", label: "Age", note: "born October 2009", color: "mint" }
   ],
 
@@ -54,6 +55,8 @@ window.PORTFOLIO = {
       status: "building",
       kind: "Brand · E-commerce · Web development",
       summary: "My own streetwear brand, run end to end. I designed and built the website myself: a custom Shopify OS 2.0 theme with a liquid-glass mobile layer — capsule header, product scroller, cart card — shipped in 26 documented versions. Alongside it: brand identity, label system, production and the launch of Collection 01 — FW26.",
+      /* shorter text for the one-page CV (cvSummary); the site shows summary */
+      cvSummary: "My own streetwear brand, run end to end. I designed and built the website: a custom Shopify OS 2.0 theme with a liquid-glass mobile layer, shipped in 26 documented versions — plus brand identity, production and Collection 01 — FW26.",
       role: "Founder — brand, web design & development, operations",
       stack: ["Shopify", "Liquid", "CSS", "JavaScript", "Branding"],
       metrics: [
@@ -71,6 +74,7 @@ window.PORTFOLIO = {
       status: "live",
       kind: "Knowledge system · Automation",
       summary: "A single Obsidian vault wired to Claude Code and versioned with Git: seven root folders, per-project context files, hooks that write a log after every session, vetted skills.",
+      cvSummary: "An Obsidian vault wired to Claude Code and versioned with Git: per-project context files, session-log hooks, vetted skills.",
       role: "System design",
       stack: ["Markdown", "Obsidian", "Claude Code", "Hooks", "Git"],
       metrics: [
@@ -95,6 +99,24 @@ window.PORTFOLIO = {
       ],
       links: [],
       repo: "bizaza-devs.github.io"
+    },
+    {
+      id: "vivaldi", accent: "sky",
+      name: "Vivaldi Workspace",
+      year: "2026",
+      status: "building",
+      kind: "Browser extension · Setup automation",
+      summary: "My own clean browser environment on Vivaldi. Gemini Panel is a Manifest V3 extension with streamed chat, Markdown rendering, page context and automatic fast / strong model choice. Next to it: a Python script that applies Brave-style privacy settings to the profile, and a macOS-style UI written in CSS.",
+      cvSummary: "Clean Vivaldi setup: Gemini Panel, a Manifest V3 extension with streamed chat and automatic model choice; a Python privacy-setup script; a macOS-style UI in CSS.",
+      role: "Design & development",
+      stack: ["JavaScript", "Manifest V3", "Gemini API", "CSS", "Python"],
+      metrics: [
+        { k: "browsers", v: "4" },
+        { k: "model modes", v: "3" },
+        { k: "storage", v: "local" }
+      ],
+      links: [],
+      repo: "vivaldi-workspace"
     }
   ],
 
@@ -103,24 +125,42 @@ window.PORTFOLIO = {
     { group: "Front-end", items: [
       { name: "HTML", level: "using" },
       { name: "CSS", level: "using" },
-      { name: "Liquid", level: "using" },
-      { name: "JavaScript", level: "learning" }
+      { name: "JavaScript", level: "using" },
+      { name: "Responsive design", level: "using" },
+      { name: "CSS animation", level: "using" },
+      { name: "Accessibility", level: "learning" }
     ] },
-    { group: "Platforms & tools", items: [
+    { group: "E-commerce", items: [
       { name: "Shopify", level: "using" },
-      { name: "Obsidian", level: "using" },
-      { name: "Claude Code", level: "using" },
-      { name: "Git", level: "learning" },
-      { name: "GitHub", level: "learning" }
+      { name: "Liquid", level: "using" },
+      { name: "Theme development", level: "using" },
+      { name: "E-commerce ops", level: "using" }
     ] },
-    { group: "Beyond code", items: [
+    { group: "Dev tools", items: [
+      { name: "Git", level: "using" },
+      { name: "GitHub", level: "using" },
+      { name: "GitHub Pages", level: "using" },
+      { name: "Markdown", level: "using" },
+      { name: "REST APIs", level: "learning" },
+      { name: "Python", level: "learning" }
+    ] },
+    { group: "AI & automation", items: [
+      { name: "Claude Code", level: "using" },
+      { name: "Prompt engineering", level: "using" },
+      { name: "AI-assisted development", level: "using" },
+      { name: "Workflow automation", level: "using" },
+      { name: "Obsidian", level: "using" }
+    ] },
+    { group: "Brand & business", items: [
       { name: "Brand design", level: "using" },
-      { name: "E-commerce ops", level: "using" },
-      { name: "Production", level: "learning" }
+      { name: "Brand identity", level: "using" },
+      { name: "Production", level: "learning" },
+      { name: "Content & social media", level: "learning" }
     ] },
     { group: "Languages", items: [
       { name: "Hungarian — native", level: "using" },
-      { name: "English", level: "learning" }
+      { name: "English — B2", level: "using" },
+      { name: "Spanish — A2", level: "learning" }
     ] }
   ],
 
@@ -179,7 +219,7 @@ window.UI = {
   latest: "Latest public repositories",
   latestSub: "Pulled live from GitHub — newest first.",
   stack: "Knowledge",
-  stackSub: "No percentages — what I use daily and what I am learning right now.",
+  stackSub: "No percentages — what I use daily and what I am learning right now. I work in Hungarian and English, and I'm learning Spanish.",
   levels: { using: "Using", learning: "Learning" },
   gh: "Work activity",
   ghSub: "Shipping code on GitHub and building with Claude — one calendar.",
