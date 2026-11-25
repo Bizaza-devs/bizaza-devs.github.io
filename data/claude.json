@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-23T15:01:13+01:00",
+  "generated": "2026-11-25T09:04:08+01:00",
   "timezone": "Europe/Budapest",
   "days": [
     {
@@ -58,16 +58,28 @@
     },
     {
       "date": "2026-11-23",
-      "prompts": 43,
-      "sessions": 3,
-      "tokens": 3161862
+      "prompts": 45,
+      "sessions": 5,
+      "tokens": 3614136
+    },
+    {
+      "date": "2026-11-24",
+      "prompts": 36,
+      "sessions": 10,
+      "tokens": 3631434
+    },
+    {
+      "date": "2026-11-25",
+      "prompts": 2,
+      "sessions": 1,
+      "tokens": 306767
     }
   ],
   "totals": {
-    "prompts": 136,
-    "sessions": 36,
-    "tokens": 12939171,
-    "activeDays": 10,
+    "prompts": 176,
+    "sessions": 49,
+    "tokens": 17329646,
+    "activeDays": 12,
     "firstDay": "2026-11-02"
   }
 }
