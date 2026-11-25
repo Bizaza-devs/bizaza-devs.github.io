@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Zalan Birtalan — Portfolio</title>
+  <meta name="description" content="Student developer and founder of the streetwear brand ALAN BIRTH. Projects, skills, live GitHub activity and a downloadable CV.">
+  <meta name="theme-color" content="#0b0c10">
+  <meta property="og:title" content="Zalan Birtalan — Portfolio">
+  <meta property="og:description" content="Student developer · founder of ALAN BIRTH.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%230b0c10'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-style='italic' font-size='17' fill='%23FFB27A' text-anchor='middle'%3EZb%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Instrument+Serif:ital@0;1&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- ?v= : bump on every release -->
+  <link rel="stylesheet" href="v2/style.css?v=2">
+  <link rel="stylesheet" href="v2/activity.css?v=2">
+  <!-- theme before first paint (no flash); reveal animations only hide anything when JS runs -->
+  <script>
+    (function () {
+      var d = document.documentElement, t;
+      d.classList.add("js");
+      try { t = localStorage.getItem("theme"); } catch (e) {}
+      if (t !== "light" && t !== "dark") t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      d.setAttribute("data-theme", t);
+      addEventListener("error", function (e) {
+        if (e.filename && (e.filename.indexOf("/assets/js/") > -1 || e.filename.indexOf("/v2/main.js") > -1)) d.classList.remove("js");
+      });
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#work">Skip to content</a>
+
+  <!-- paper grain + cursor follower (CSS/SVG only) -->
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
+
+  <header class="top">
+    <a class="top__mark" href="#index" aria-label="Home"><span class="serif">Z</span>B</a>
+    <nav class="top__nav" aria-label="Main"><ul id="navLinks"></ul></nav>
+    <div class="top__tools">
+      <span class="top__clock mono" aria-hidden="true"><i class="dot"></i><span class="js-clock">--:--</span></span>
+      <button class="icon-btn theme-btn" type="button" aria-label="Toggle light / dark theme" data-cursor="theme">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></g></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M20.5 14.6A8.6 8.6 0 0 1 9.4 3.5a8.6 8.6 0 1 0 11.1 11.1Z"/></svg>
+      </button>
+      <a class="top__cv cv-link magnetic" download data-cursor="pdf">CV <span aria-hidden="true">↓</span></a>
+      <button class="icon-btn top__menu" id="menuBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="sheet">
+        <span class="burger" aria-hidden="true"><i></i><i></i></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile menu -->
+  <div class="sheet" id="sheet" aria-hidden="true">
+    <ol class="sheet__links" id="sheetLinks"></ol>
+    <div class="sheet__foot">
+      <a class="btn btn--solid cv-link" download><span data-ui="cv"></span> <span class="mono">PDF ↓</span></a>
+      <div class="sheet__social mono" id="sheetSocial"></div>
+    </div>
+  </div>
+
+  <main>
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="index">
+      <div class="hero__top">
+        <div class="chip mono reveal"><span class="pulse"></span><span id="heroChip"></span></div>
+        <p class="hero__role mono reveal" id="heroRole"></p>
+      </div>
+
+      <div class="hero__namewrap">
+        <h1 class="hero__name" id="heroName"></h1>
+        <!-- handwritten note next to the name -->
+        <div class="note note--hero" aria-hidden="true">
+          <span class="hand">hi, that's me</span>
+          <svg class="draw" viewBox="0 0 120 70" width="120" height="70"><path pathLength="1" d="M6 8c30 2 62 10 82 30 8 8 12 16 14 24"/><path pathLength="1" d="M90 54l12 10 4-15"/></svg>
+        </div>
+      </div>
+
+      <div class="hero__grid">
+        <div class="hero__copy">
+          <p class="hero__build reveal"><span data-ui="iBuild"></span> <span class="rot-wrap"><span class="rot serif" id="heroRot" aria-live="polite"></span></span></p>
+          <p class="hero__tagline reveal" id="heroTagline"></p>
+          <div class="hero__actions reveal">
+            <a class="btn btn--solid cv-link magnetic" download data-cursor="pdf"><span data-ui="cv"></span> <span class="mono">PDF ↓</span></a>
+            <a class="btn btn--ghost magnetic" href="#work"><span data-ui="work"></span> <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+
+        <!-- ID card: stitched clothing-label style -->
+        <aside class="label reveal" aria-label="Quick facts" id="label">
+          <div class="label__stitch" aria-hidden="true"></div>
+          <div class="label__head">
+            <div class="label__mono serif" aria-hidden="true">Zb</div>
+            <div>
+              <div class="label__title" id="idName"></div>
+              <div class="label__sub mono">ID // bizaza</div>
+            </div>
+          </div>
+          <dl class="label__list mono" id="idcard"></dl>
+          <div class="label__status mono" id="heroStatus"></div>
+          <div class="label__care mono" aria-hidden="true"><span>◯</span><span>△</span><span>▢</span><span>⌁</span><span>✕</span></div>
+        </aside>
+      </div>
+
+      <a class="scroll-cue mono" href="#work" aria-label="Scroll down"><span class="scroll-cue__line"></span>scroll</a>
+    </section>
+
+    <!-- ============ MARQUEE ============ -->
+    <div class="marquee" aria-hidden="true"><div class="marquee__track" id="marquee"></div></div>
+
+    <!-- ============ STATS ============ -->
+    <section class="stats" id="stats" aria-label="Numbers"></section>
+
+    <!-- ============ 01 WORK ============ -->
+    <section class="section" id="work">
+      <header class="shead reveal">
+        <span class="shead__idx serif">01</span>
+        <h2 class="shead__title" data-ui="work"></h2>
+        <p class="shead__sub" data-ui="workSub"></p>
+      </header>
+      <div class="projects" id="projects"></div>
+
+      <header class="subhead reveal">
+        <h3 class="mono" data-ui="latest"></h3>
+        <p data-ui="latestSub"></p>
+      </header>
+      <ol class="repos" id="ghRepoList"></ol>
+    </section>
+
+    <!-- ============ 02 ABOUT ============ -->
+    <section class="section" id="about">
+      <header class="shead reveal">
+        <span class="shead__idx serif">02</span>
+        <h2 class="shead__title" data-ui="about"></h2>
+        <p class="shead__sub" data-ui="aboutSub"></p>
+      </header>
+      <div class="about">
+        <div class="about__bio">
+          <p class="about__lead" id="aboutLead"></p>
+          <div class="about__cols">
+            <div class="reveal">
+              <h3 class="tag-h"><span class="hand" data-ui="now"></span></h3>
+              <ul class="now mono" id="aboutNow"></ul>
+            </div>
+            <div class="reveal">
+              <h3 class="tag-h"><span class="hand" data-ui="interests"></span></h3>
+              <div class="stickers" id="aboutInterests"></div>
+            </div>
+          </div>
+        </div>
+        <ol class="timeline" id="timeline"><li class="timeline__rail" aria-hidden="true"><span></span></li></ol>
+      </div>
+    </section>
+
+    <!-- ============ 03 STACK ============ -->
+    <section class="section" id="stack">
+      <header class="shead reveal">
+        <span class="shead__idx serif">03</span>
+        <h2 class="shead__title" data-ui="stack"></h2>
+        <p class="shead__sub" data-ui="stackSub"></p>
+      </header>
+      <div class="legend mono reveal" id="legend"></div>
+      <div class="skills" id="stackGrid"></div>
+    </section>
+
+    <!-- ============ 04 ACTIVITY (filled by the v2 activity module) ============ -->
+    <section class="section" id="activity">
+      <header class="shead reveal">
+        <span class="shead__idx serif">04</span>
+        <h2 class="shead__title" data-ui="gh"></h2>
+        <p class="shead__sub"><span data-ui="ghSub"></span> <a class="mono link" id="ghProfile" target="_blank" rel="noopener" data-cursor="open"></a></p>
+      </header>
+      <div id="activityV2"></div>
+    </section>
+
+    <!-- ============ 05 CONTACT ============ -->
+    <section class="section contact" id="contact">
+      <span class="shead__idx serif reveal">05</span>
+      <h2 class="contact__title" id="contactTitle">Let’s build<br><span class="serif contact__em">something.<svg class="draw contact__swash" viewBox="0 0 300 30" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 20C60 6 140 4 296 14"/><path pathLength="1" d="M40 26c70-8 150-10 230-6"/></svg></span></h2>
+      <p class="contact__sub reveal" data-ui="contactSub"></p>
+      <div class="contact__mailrow reveal">
+        <a class="contact__mail" id="contactMail" data-cursor="write"></a>
+        <button class="icon-btn copy-btn magnetic" id="copyMail" type="button" aria-label="Copy email address" data-cursor="copy">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        </button>
+        <div class="note note--mail" aria-hidden="true">
+          <svg class="draw" viewBox="0 0 90 50" width="90" height="50"><path pathLength="1" d="M84 6C60 4 30 12 14 36"/><path pathLength="1" d="M8 24l6 14 14-4"/></svg>
+          <span class="hand">say hi :)</span>
+        </div>
+      </div>
+      <div class="contact__links reveal" id="contactLinks"></div>
+    </section>
+  </main>
+
+  <footer class="footer mono">
+    <span data-ui="built"></span>
+    <span class="footer__hint"><kbd>/</kbd> <span data-ui="paletteHint"></span></span>
+    <span><span data-ui="updated"></span> <span id="updated"></span></span>
+  </footer>
+
+  <!-- Back to top + scroll progress ring -->
+  <a class="to-top" href="#index" aria-label="Back to top">
+    <svg viewBox="0 0 48 48" aria-hidden="true"><circle class="to-top__track" cx="24" cy="24" r="21"/><circle class="to-top__ring" cx="24" cy="24" r="21"/></svg>
+    <span aria-hidden="true">↑</span>
+  </a>
+
+  <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Command palette (Ctrl K / ⌘K / "/") -->
+  <div class="palette" id="palette" hidden>
+    <div class="palette__box" role="dialog" aria-modal="true" aria-label="Command palette">
+      <input class="palette__input mono" id="paletteInput" type="text" autocomplete="off" spellcheck="false" aria-label="Command">
+      <ul class="palette__list mono" id="paletteList" role="listbox"></ul>
+    </div>
+  </div>
+
+  <noscript><p class="noscript">This portfolio renders from data with JavaScript. Please enable it.</p></noscript>
+
+  <script src="assets/js/data.js?v=8" defer></script>
+  <script src="assets/js/github.js?v=8" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+  <script src="v2/main.js?v=2" defer></script>
+  <script src="v2/activity.js?v=2" defer></script>
+</body>
+</html>

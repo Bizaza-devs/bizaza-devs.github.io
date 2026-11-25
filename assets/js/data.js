@@ -1,5 +1,5 @@
 /* ============================================================
-   PORTFOLIO DATA — all content lives here. The site (index.html)
+   PORTFOLIO DATA — all content lives here. The site (index.html, v2.html, v1.html)
    and the CV (cv.html) are both rendered from this file.
    Empty string / null = the field is not shown.
    ============================================================ */
@@ -7,7 +7,7 @@
 window.PORTFOLIO = {
   github: "Bizaza-devs",
   timezone: "Europe/Budapest",
-  updated: "2026-11-24",
+  updated: "2026-11-25",
   cvPdf: "cv/Zalan-Birtalan-CV.pdf",
 
   person: {
@@ -51,6 +51,12 @@ window.PORTFOLIO = {
     {
       id: "alanbirth", accent: "amber",
       name: "ALAN BIRTH",
+      tags: ["Brand", "Web"],
+      cover: "v3/img/alanbirth-cover.webp",
+      images: [
+        { src: "v3/img/alanbirth-desktop.webp", alt: "alanbirth.com on desktop: the Collection 01 pre-launch page with an email sign-up", w: 1800, h: 1125 },
+        { src: "v3/img/alanbirth-mobile.webp", alt: "alanbirth.com on a phone", w: 1000, h: 2000 }
+      ],
       year: "2025 —",
       status: "building",
       kind: "Brand · E-commerce · Web development",
@@ -70,6 +76,11 @@ window.PORTFOLIO = {
     {
       id: "secondbrain", accent: "indigo",
       name: "Second Brain",
+      tags: ["Systems"],
+      cover: "v3/img/secondbrain-cover.webp",
+      images: [
+        { src: "v3/img/secondbrain-wide.webp", alt: "The real link graph of the vault: every dot is a note, every line a link between two notes", w: 1600, h: 1000 }
+      ],
       year: "2026",
       status: "live",
       kind: "Knowledge system · Automation",
@@ -87,14 +98,20 @@ window.PORTFOLIO = {
     {
       id: "portfolio", accent: "mint",
       name: "This portfolio",
+      tags: ["Web"],
+      cover: "v3/img/portfolio-cover.webp",
+      images: [
+        { src: "v3/img/portfolio-desktop.webp", alt: "This portfolio on desktop", w: 1800, h: 1125 },
+        { src: "v3/img/portfolio-mobile.webp", alt: "This portfolio on a phone", w: 1000, h: 2000 }
+      ],
       year: "2026",
       status: "live",
       kind: "Website",
-      summary: "Zero images, zero frameworks. Plain HTML, CSS and JavaScript with generative backgrounds, live data from the GitHub API and a generated PDF résumé.",
+      summary: "Zero frameworks, zero build steps. Plain HTML, CSS and JavaScript: a lookbook-style index of my work, live data from the GitHub API, charts of my daily coding and a generated PDF résumé. Third design so far.",
       role: "Design & development",
       stack: ["HTML", "CSS", "JavaScript", "GitHub API", "GitHub Pages"],
       metrics: [
-        { k: "images", v: "0" },
+        { k: "designs", v: "3" },
         { k: "dependencies", v: "0" }
       ],
       links: [],
@@ -103,6 +120,11 @@ window.PORTFOLIO = {
     {
       id: "vivaldi", accent: "sky",
       name: "Vivaldi Workspace",
+      tags: ["Web", "Systems"],
+      cover: "v3/img/vivaldi-cover.webp",
+      images: [
+        { src: "v3/img/vivaldi-panel.webp", alt: "The Gemini Panel extension: an empty chat with quick actions for the open page", w: 1000, h: 1880 }
+      ],
       year: "2026",
       status: "building",
       kind: "Browser extension · Setup automation",
